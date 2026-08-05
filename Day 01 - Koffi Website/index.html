@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Koffi — Coffee that gives you space to breathe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Joti+One&family=Shrikhand&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Display face from the Figma source: Nimbu Demo Semi Bold.
+     Embedded from ./assets so it renders on any machine.
+     (Internal family name is "Nimbu SemBd".) */
+  @font-face {
+    font-family: "Nimbu Local";
+    src: url("assets/NimbuDemo-SemiBold.otf") format("opentype"),
+         local("Nimbu SemBd"), local("Nimbu Demo Semi Bold"), local("NimbuDemo-SemiBold");
+    font-weight: 600;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Nimbu Local";
+    src: url("assets/NimbuDemo-Medium.otf") format("opentype"),
+         local("Nimbu Med"), local("Nimbu Demo Medium"), local("NimbuDemo-Medium");
+    font-weight: 500;
+    font-display: swap;
+  }
+
+  :root {
+    /* exact tokens pulled from the Figma file */
+    --green: #09543d;
+    --pink: #ffa9e9;
+    --choc: #461e10;
+    --shadow-dark: #012218;
+    --cream: #f7f4ec;
+    --white: #ffffff;
+    --display: "Nimbu Local", "NimbuDemo", "Nimbu Demo", "Shrikhand", cursive;
+
+    /* motion tokens */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  #blends, #shop, #mug { scroll-margin-top: 16px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: var(--cream);
+    color: var(--choc);
+    padding: 16px; /* cream frame around the rounded sections, as in Figma */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ HERO: rounded green frame, fills the viewport ============ */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 32px);
+    min-height: calc(100svh - 32px);
+    background: var(--green);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* noise texture (from Figma, 200px tile @ 9% opacity) */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("assets/noise.png");
+    background-size: 200px 200px;
+    opacity: 0.09;
+    transform: rotate(180deg);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px 45px 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    z-index: 1;
+  }
+
+  /* --- Nav --- */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--white);
+  }
+
+  .logo-mark { width: 22px; height: 22px; display: block; }
+
+  /* --- Logo mark: butterfly ⇄ coffee cup coin-flip --- */
+  .logo {
+    transition: transform 0.35s var(--ease-spring);
+    transform-origin: left center;
+  }
+  .logo-flip { width: 22px; height: 22px; perspective: 120px; }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s var(--ease-spring);
+  }
+  .flip-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-face.back { transform: rotateY(180deg); }
+  .logo.flipped .flip-inner { transform: rotateY(180deg); }
+  @media (hover: hover) and (pointer: fine) {
+    .logo:hover { transform: scale(1.1); }
+    .logo:hover .flip-inner { transform: rotateY(180deg); }
+  }
+
+  .logo-word {
+    font-family: "Joti One", cursive;
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: 0.571px;
+    line-height: 19px;
+    text-transform: uppercase;
+  }
+
+  /* --- Buttons: hard offset shadow, exact Figma spec --- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--choc);
+    padding: 20px 26px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 1px var(--choc);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn { transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-spring); }
+  .btn:hover { transform: translate(-2px, -3px) scale(1.04); box-shadow: 4px 5px 0 1px var(--choc); }
+  .btn:active { transform: translate(2px, 2px) scale(0.97); box-shadow: 0 0 0 0 var(--choc); transition-duration: 0.06s; }
+  .btn:focus-visible { outline: 3px dashed var(--pink); outline-offset: 4px; }
+
+  .btn-pink { background: var(--pink); }
+  .btn-white { background: var(--white); box-shadow: 2px 2px 0 1px var(--shadow-dark); }
+  .btn-white:hover { box-shadow: 4px 5px 0 1px var(--shadow-dark); }
+  .btn-white:active { box-shadow: 0 0 0 0 var(--shadow-dark); }
+
+  .nav .btn {
+    padding: 16px 20px;
+    font-size: 17px;
+    line-height: 15px;
+    border-radius: 7px;
+    box-shadow: 1.5px 1.5px 0 0.75px var(--choc);
+  }
+
+  /* --- Hero entrance: one orchestrated sequence on load --- */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .nav        { animation: rise 0.5s var(--ease-out-expo) 0.05s backwards; }
+  .hero-title { animation: rise 0.6s var(--ease-out-expo) 0.12s backwards; }
+  .hero-sub   { animation: rise 0.6s var(--ease-out-expo) 0.22s backwards; }
+  .hero-ctas  { animation: rise 0.6s var(--ease-out-expo) 0.32s backwards; }
+  .hero-art   { animation: rise 0.7s var(--ease-out-expo) 0.25s backwards; }
+
+  /* --- Hero body --- */
+  .hero-grid {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 45px 0 60px;
+  }
+
+  .hero-copy {
+    width: 51%;
+    min-width: 560px;
+    max-width: 660px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(40px, 5vw, 75.2px);
+    line-height: 1.0125; /* 76.15/75.21 per Figma */
+    white-space: nowrap; /* the <br> tags define the design's exact 3 lines */
+    letter-spacing: 0.0071em; /* 0.5368px @ 75.21px */
+    text-transform: uppercase;
+    color: var(--white);
+    text-rendering: optimizeLegibility;
+  }
+
+  .hl {
+    /* inline-block keeps the pink box on its own line, exactly like the
+       79.9px rect in Figma, without painting over neighbouring lines */
+    display: inline-block;
+    line-height: 1;
+    background: var(--pink);
+    color: var(--choc);
+    padding: 0.03em 0.16em 0.05em;
+    margin: -0.04em 0 -0.04em 0.05em;
+    vertical-align: baseline;
+  }
+
+  .hero-sub {
+    max-width: 578px;
+    margin-top: 37px;
+    font-size: 20px;
+    line-height: normal;
+    letter-spacing: -0.5px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 60px;
+  }
+
+  /* --- Illustration (exact asset from Figma, flipped as in the source) --- */
+  .hero-art {
+    position: relative;
+    width: 589px;
+    max-width: 46%;
+    aspect-ratio: 589 / 526.6;
+    flex-shrink: 1;
+  }
+
+  /* exported SVG already bakes in Figma's mirror + crop */
+  .hero-art .art-crop { position: absolute; inset: 0; }
+  .hero-art .art-crop img { width: 100%; height: 100%; display: block; }
+
+  /* Koffi tag overlaid on the cup (Vector 3 in Figma: 88x46.5 @ 1033,569) */
+  .cup-tag {
+    position: absolute;
+    left: 58.9%;
+    top: 83%;
+    width: 14.94%; /* 88/589 */
+    aspect-ratio: 88 / 46.5;
+    pointer-events: none;
+  }
+  .cup-tag svg { width: 100%; height: 100%; display: block; }
+  .cup-tag span {
+    position: absolute;
+    left: 16%;
+    top: 34%;
+    width: 74%;
+    text-align: center;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(11px, 1.6vw, 20px);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--white);
+    transform: rotate(12deg);
+    transform-origin: center;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1100px) {
+    .hero-copy { width: 55%; min-width: 0; }
+    .hero-sub { font-size: 17px; }
+    .btn { font-size: 14px; padding: 16px 20px; }
+  }
+  @media (max-width: 860px) {
+    .hero { min-height: 0; }
+    .hero-grid { flex-direction: column; align-items: flex-start; padding-bottom: 0; }
+    .hero-copy { width: 100%; min-width: 0; }
+    .hero-art { max-width: 100%; width: 480px; align-self: center; }
+    .nav .btn { font-size: 13px; padding: 12px; }
+  }
+  @media (max-width: 520px) {
+    body { padding: 8px; }
+    .hero { min-height: calc(100svh - 16px); }
+    .hero-inner { padding: 16px 16px 0; }
+    .hero-title { font-size: clamp(30px, 9.6vw, 44px); }
+    .hero-sub { font-size: 15px; }
+    .hero-ctas { gap: 12px; }
+    .hero-ctas .btn { width: 100%; }
+    .nav .btn { padding: 12px 14px; font-size: 13px; line-height: 13px; }
+    .logo-word { font-size: 22px; }
+  }
+
+  /* ============ WHY KOFFI EXISTS ============ */
+  .why {
+    background: #fffdf7;
+    padding: 100px 45px;
+    border-radius: 12px;
+    margin-top: 16px; /* gap between the rounded frames, as in Figma */
+  }
+
+  .why-frame {
+    max-width: 1185px;
+    margin: 0 auto;
+    border-left: 1.5px dashed #d9d4c8;
+    border-right: 1.5px dashed #d9d4c8;
+    padding: 0 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+  }
+
+  /* --- Eyebrow badge --- */
+  .why-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px 10px 9px;
+    border-radius: 6px;
+    border-bottom: 1px solid #ededed;
+    font-family: "Inter", "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 9px;
+    line-height: 15px;
+    color: var(--choc);
+  }
+  .why-eyebrow .slashes { opacity: 0.9; }
+  .why-eyebrow .flip { transform: scaleX(-1); display: inline-block; }
+  .why-eyebrow svg { width: 14px; height: 14px; display: block; }
+
+  /* --- Heading --- */
+  .why-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+    margin-top: -38px;
+  }
+
+  .why-title {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(32px, 3.95vw, 50.1px);
+    line-height: 1.118; /* 56/50.1 per Figma */
+    letter-spacing: -0.52px;
+    color: var(--choc);
+  }
+
+  .hl2 {
+    display: inline-block;
+    line-height: 1;
+    background: var(--pink);
+    padding: 0.03em 0.14em 0.06em;
+    margin: -0.04em 0;
+  }
+
+  .why-sub {
+    max-width: 400px;
+    font-size: 15px;
+    line-height: 24px;
+    color: rgba(38, 38, 38, 0.72);
+    text-wrap: balance;
+  }
+
+  /* --- Scattered cards --- */
+  .why-cards {
+    position: relative;
+    width: 100%;
+    max-width: 1185px;
+    height: 640px;
+  }
+
+  .why-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    height: 201px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 67px rgba(0, 0, 0, 0.1);
+    color: #332601;
+  }
+
+  .why-card h3 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    letter-spacing: -0.24px;
+    margin-bottom: 15px;
+  }
+
+  .why-card p {
+    font-size: 12px;
+    line-height: 16px;
+    max-width: 260px;
+  }
+
+  .why-card .card-icon {
+    flex-shrink: 0;
+    width: 118px;
+    height: 121px;
+    object-fit: contain;
+  }
+
+  .why-card {
+    transform: translateY(calc(var(--ty, 0px) + var(--hy, 0px))) rotate(var(--r, 0deg));
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.5s var(--ease-out-expo);
+  }
+  .card-1 { left: 13.6%; width: 54.9%; top: 22px;  --r: 1.5deg; z-index: 1; }
+  .card-2 { left: 31%;   width: 55.3%; top: 212px; --r: -3deg;  z-index: 2; }
+  .card-3 { left: 22.9%; width: 55.9%; top: 402px; --r: 5.6deg; z-index: 3; }
+  .why-card .card-icon { transition: transform 0.35s var(--ease-spring); }
+
+  @media (max-width: 1020px) {
+    .why-cards { height: auto; display: flex; flex-direction: column; gap: 28px; align-items: center; }
+    .why-card { position: static; width: 100%; max-width: 655px; height: auto; min-height: 201px; }
+  }
+  @media (max-width: 560px) {
+    .why { padding: 60px 20px; }
+    .why-card { flex-direction: column; align-items: flex-start; padding: 28px; }
+    .why-card.card-2 { flex-direction: column-reverse; }
+    .why-card .card-icon { width: 92px; height: 94px; }
+  }
+
+  /* ============ SHARED PANEL & EYEBROW ============ */
+  .panel { border-radius: 12px; margin-top: 16px; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Inter", "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 9px;
+    line-height: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(70, 30, 16, 0.12);
+  }
+  .eyebrow .flip { transform: scaleX(-1); display: inline-block; }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(32px, 3.95vw, 50.1px);
+    line-height: 1.118;
+    letter-spacing: -0.52px;
+  }
+
+  .section-sub { font-size: 15px; line-height: 24px; text-wrap: balance; }
+
+  /* ============ MARQUEE ============ */
+  .marquee {
+    background: var(--green);
+    overflow: hidden;
+    padding: 20px 0;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 26s linear infinite;
+    will-change: transform;
+  }
+  .marquee span {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    white-space: nowrap;
+    padding-right: 48px; /* identical trailing space on each copy = seamless loop */
+  }
+  .marquee span b { color: var(--pink); font-weight: 600; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ============ BLENDS / SHOP ============ */
+  .blends {
+    background: #fffdf7;
+    padding: 100px 45px;
+  }
+  .blends .eyebrow, .blends .section-title { color: var(--choc); }
+  .blends .section-sub { color: rgba(38, 38, 38, 0.72); }
+
+  .blend-grid {
+    max-width: 1185px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .blend-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 0 67px rgba(0, 0, 0, 0.08);
+    padding: 36px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #332601;
+    transform: translateY(calc(var(--off, 0px) + var(--ty, 0px) + var(--hy, 0px))) rotate(var(--r, 0deg));
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.5s var(--ease-out-expo);
+  }
+  .blend-card:nth-child(1) { --r: -1.2deg; }
+  .blend-card:nth-child(2) { --r: 0.8deg; --off: 14px; }
+  .blend-card:nth-child(3) { --r: 1.6deg; }
+
+  .blend-card svg { width: 150px; height: auto; margin-bottom: 24px; transition: transform 0.35s var(--ease-spring); }
+
+  .blend-name {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .blend-notes { font-size: 13px; line-height: 20px; color: rgba(38,38,38,0.72); max-width: 220px; }
+
+  .blend-buy {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .blend-price {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+  }
+  .btn-small {
+    padding: 12px 18px;
+    font-size: 12px;
+    border-radius: 7px;
+  }
+
+  /* ============ RITUAL ============ */
+  .ritual {
+    position: relative;
+    background: var(--green);
+    padding: 100px 45px;
+    overflow: hidden;
+  }
+  .ritual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("assets/noise.png");
+    background-size: 200px 200px;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+  .ritual > * { position: relative; }
+  .ritual .eyebrow { color: var(--white); border-bottom-color: rgba(255,255,255,0.25); }
+  .ritual .section-title { color: var(--white); }
+  .ritual .section-sub { color: rgba(255,255,255,0.8); }
+
+  .ritual-steps {
+    max-width: 1050px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .step {
+    text-align: center;
+    color: var(--white);
+    padding: 0 10px;
+  }
+  .step-num {
+    display: inline-block;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 44px;
+    color: var(--choc);
+    background: var(--pink);
+    line-height: 1;
+    padding: 10px 16px 12px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 0 1px var(--choc);
+    transform: rotate(-2deg);
+    margin-bottom: 22px;
+  }
+  .step:nth-child(2) .step-num { transform: rotate(1.5deg); }
+  .step:nth-child(3) .step-num { transform: rotate(3deg); }
+  .step h3 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .step p { font-size: 14px; line-height: 22px; color: rgba(255,255,255,0.8); max-width: 260px; margin: 0 auto; }
+
+  /* ============ TESTIMONIALS ============ */
+  .voices {
+    background: #fffdf7;
+    padding: 100px 45px;
+  }
+  .voices .eyebrow, .voices .section-title { color: var(--choc); }
+
+  /* Infinite scrolling rail of testimonial cards */
+  .voices-marquee {
+    overflow: hidden;
+    padding: 30px 0 40px; /* room for card tilt + hover growth */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .voices-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 45s linear infinite;
+    will-change: transform;
+  }
+  .voices-group {
+    display: flex;
+    gap: 44px;
+    padding-right: 44px;
+  }
+  .voices-marquee:hover .voices-track { animation-play-state: paused; }
+
+  .voice-card {
+    position: relative;
+    width: 350px;
+    flex-shrink: 0;
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid rgba(70, 30, 16, 0.06);
+    box-shadow: 0 6px 18px rgba(59, 35, 16, 0.05);
+    padding: 34px 30px;
+    color: #332601;
+    transform: translateY(var(--off, 0px)) rotate(var(--r, 0deg)) scale(var(--s, 1));
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo);
+  }
+  .voices-group .voice-card:nth-child(3n + 1) { --r: -1.5deg; }
+  .voices-group .voice-card:nth-child(3n + 2) { --r: 1deg; --off: 14px; }
+  .voices-group .voice-card:nth-child(3n)     { --r: -0.8deg; --off: -6px; }
+
+  .voice-quote { font-size: 15px; line-height: 25px; margin-bottom: 18px; }
+  .voice-quote mark { background: var(--pink); color: var(--choc); padding: 0 4px; }
+  .voice-who { font-weight: 600; font-size: 13px; }
+  .voice-who span { display: block; font-weight: 400; font-size: 12px; color: rgba(38,38,38,0.6); }
+
+  /* ============ BIG CTA ============ */
+  .cta {
+    position: relative;
+    background: var(--green);
+    padding: 110px 45px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("assets/noise.png");
+    background-size: 200px 200px;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+  .cta > * { position: relative; }
+  .cta-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(38px, 4.8vw, 64px);
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 18px;
+  }
+  .cta-sub { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+  .cta .btn { font-size: 15px; }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    position: relative;
+    background: var(--green);
+    padding: 80px 45px 0;
+    color: var(--white);
+    overflow: hidden;
+  }
+  .footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("assets/noise.png");
+    background-size: 200px 200px;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+  .footer > * { position: relative; }
+
+  .footer-hero {
+    max-width: 1185px;
+    margin: 0 auto 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 30px;
+  }
+  .footer-hero h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(28px, 3.9vw, 52px);
+    line-height: 1.12;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .footer-hero .cup {
+    width: clamp(48px, 5vw, 72px);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .footer-div {
+    max-width: 1185px;
+    margin: 0 auto 50px;
+    border-top: 1.5px dashed rgba(255, 255, 255, 0.25);
+  }
+
+  /* --- Scatter field: scalloped tags that flee the cursor --- */
+  .footer-tags {
+    position: relative;
+    width: 100%;
+    margin: 30px auto 0;
+    height: 300px;
+  }
+  .tag {
+    position: absolute;
+    width: calc(var(--w, 190px) * 1.35); /* slightly bigger than the base sizes */
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.6s var(--ease-spring);
+    will-change: transform;
+    user-select: none;
+  }
+  .tag svg { width: 100%; height: auto; display: block; fill: var(--tag, var(--pink)); }
+  .tag s {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--choc);
+    text-decoration-thickness: 1.5px;
+  }
+
+  @media (max-width: 700px) {
+    .footer-hero { flex-direction: column; gap: 18px; }
+    .footer-tags {
+      height: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      justify-content: center;
+      padding-bottom: 30px;
+    }
+    .tag { position: static; --w: 140px; }
+    .tag s { font-size: 10px; }
+  }
+  .footer-top {
+    max-width: 1185px;
+    margin: 0 auto 44px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  .footer-tag { margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.7); max-width: 240px; line-height: 21px; }
+  .footer-links { display: flex; gap: 60px; flex-wrap: wrap; }
+  .footer-links h4 {
+    font-family: "Inter", "Poppins", sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+  .footer-links a {
+    display: block;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 30px;
+  }
+  .footer-links a:hover { color: var(--pink); }
+  .footer-bottom {
+    max-width: 1185px;
+    margin: 0 auto;
+    padding-top: 22px;
+    border-top: 1px dashed rgba(255,255,255,0.25);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  @media (max-width: 900px) {
+    .blend-grid, .ritual-steps { grid-template-columns: 1fr; max-width: 560px; }
+    .blend-card:nth-child(2) { --off: 0px; }
+    .voice-card { width: 300px; }
+  }
+
+  /* ============ SCROLL REVEAL SYSTEM ============ */
+  /* :where() keeps specificity at zero so card transform rules stay in charge */
+  :where([data-reveal]) {
+    transform: translateY(var(--ty, 0px));
+    transition: transform 0.6s var(--ease-out-expo), opacity 0.6s var(--ease-out-expo);
+  }
+  .js [data-reveal]:not(.in) { opacity: 0; --ty: 20px; }
+  [data-reveal].in { opacity: 1; --ty: 0px; }
+
+  /* stagger within groups */
+  .blend-grid  > :nth-child(2),
+  .ritual-steps > :nth-child(2), .why-cards > :nth-child(2) { transition-delay: 0.08s; }
+  .blend-grid  > :nth-child(3),
+  .ritual-steps > :nth-child(3), .why-cards > :nth-child(3) { transition-delay: 0.16s; }
+  .blend-card:hover, .voice-card:hover, .why-card:hover { transition-delay: 0s; }
+
+  /* marquee: pause on hover */
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  .step-num { transition: transform 0.3s var(--ease-spring); }
+
+  /* Character animations: each icon acts out what it depicts */
+  @keyframes icon-draw {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    25%      { transform: rotate(-8deg) translateY(-3px); }
+    55%      { transform: rotate(5deg) translateY(1px); }
+    80%      { transform: rotate(-3deg) translateY(-1px); }
+  }
+  @keyframes icon-snap {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    30%      { transform: scale(1.14) rotate(-9deg); }
+    55%      { transform: scale(0.95) rotate(5deg); }
+    78%      { transform: scale(1.05) rotate(-2deg); }
+  }
+  @keyframes icon-wave {
+    0%, 100% { transform: rotate(0deg); }
+    20%      { transform: rotate(-16deg); }
+    40%      { transform: rotate(12deg); }
+    60%      { transform: rotate(-10deg); }
+    80%      { transform: rotate(6deg); }
+  }
+  @keyframes bag-wobble {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    30%      { transform: rotate(-4deg) scale(1.04, 0.97); }
+    60%      { transform: rotate(3deg) scale(0.98, 1.03); }
+    85%      { transform: rotate(-1deg) scale(1.01); }
+  }
+
+  .card-1 .card-icon { transform-origin: 30% 85%; } /* pivot at the drawing hand's wrist */
+  .card-2 .card-icon { transform-origin: 50% 60%; } /* pop from the snap */
+  .card-3 .card-icon { transform-origin: 60% 92%; } /* wave from the hole it pops out of */
+  .blend-card svg    { transform-origin: 50% 88%; } /* bags wobble on their base */
+
+  /* Hover interactions: gated so touch taps don't trigger false hover states */
+  @media (hover: hover) and (pointer: fine) {
+    .why-card:hover { --hy: -8px; --r: 0deg; z-index: 5; }
+    .voice-card:hover { --s: 1.06; --r: 0deg; z-index: 5; box-shadow: 0 14px 30px rgba(59, 35, 16, 0.09); }
+    .card-1:hover .card-icon { animation: icon-draw 0.9s ease-in-out; }
+    .card-2:hover .card-icon { animation: icon-snap 0.7s var(--ease-spring); }
+    .card-3:hover .card-icon { animation: icon-wave 0.9s ease-in-out; }
+    .blend-card:hover { --r: 0deg; --hy: -6px; }
+    .blend-card:hover svg { animation: bag-wobble 0.7s ease-in-out; }
+    .step:hover .step-num { transform: rotate(0deg) scale(1.06); }
+  }
+  @media (max-width: 560px) {
+    .blends, .ritual, .voices, .cta { padding: 60px 20px; }
+    .marquee { padding: 14px 0; }
+    .marquee span { font-size: 20px; }
+    .section-head { margin-bottom: 40px; }
+    .section-title { font-size: clamp(28px, 8vw, 38px); }
+    .blend-card { padding: 28px 22px 26px; }
+    .blend-card svg { width: 120px; }
+    .step h3 { font-size: 22px; }
+    .voice-card { width: 260px; padding: 26px 22px; }
+    .voice-quote { font-size: 14px; line-height: 23px; }
+    .voices-marquee {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    }
+    .cta-title { font-size: clamp(30px, 9vw, 42px); }
+    .cta .btn { width: 100%; max-width: 340px; }
+    .footer { padding: 44px 22px 24px; }
+    .footer-links { gap: 32px; }
+    .footer-links a { line-height: 38px; } /* comfortable touch targets */
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* Mobile ergonomics */
+  a, button { -webkit-tap-highlight-color: transparent; }
+  @media (max-width: 400px) {
+    .hero-title { font-size: clamp(26px, 9.2vw, 34px); }
+    .why-frame { border-left: none; border-right: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <nav class="nav" aria-label="Main">
+      <a class="logo" href="#" aria-label="Koffi home">
+        <span class="logo-flip" aria-hidden="true">
+          <span class="flip-inner">
+            <img class="logo-mark flip-face" src="assets/logo-mark.svg" alt="" />
+            <svg class="logo-mark flip-face back" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 3c-1.5 2 1.5 3 0 5M17 3c-1.5 2 1.5 3 0 5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+              <path d="M5 12h18v3h2.5a3.5 3.5 0 0 1 0 7H22.4A8 8 0 0 1 15 27h-2a8 8 0 0 1-8-8v-7Z" fill="#fff"/>
+              <path d="M23 17.5h2.3a1.7 1.7 0 0 1 0 3.4H23v-3.4Z" fill="#09543d"/>
+            </svg>
+          </span>
+        </span>
+        <span class="logo-word">KOFFI</span>
+      </a>
+      <a class="btn btn-pink" href="#blends">Explore Blends</a>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1 class="hero-title">
+          Love for Koffi,<br />
+          fear of <span class="hl">small</span><br />
+          places.
+        </h1>
+        <p class="hero-sub">
+          Great Koffi deserves room to breathe, and so do you.
+          Discover blends crafted for comfort, calm, and a little
+          escape in every sip.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-pink" href="#shop">Shop our KOFFI</a>
+          <a class="btn btn-white" href="#mug">Make Your Mug Happy</a>
+        </div>
+      </div>
+
+      <div class="hero-art" role="img" aria-label="Illustration of a person in a huge puffer jacket holding a cup of Koffi, steam drifting upward">
+        <div class="art-crop">
+          <img src="assets/image-22.svg" alt="" />
+        </div>
+        <div class="cup-tag">
+          <svg viewBox="0 0 88 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9 Q6 5 10 5 L79 16 Q83 16.7 82.6 20.7 L80 38 Q79.4 42 75.4 41.4 L8 31 Q4 30.4 4.4 26.4 Z" fill="#09543d"/>
+          </svg>
+          <span>Koffi</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ============ WHY KOFFI EXISTS ============ -->
+<section class="why" id="blends">
+  <div class="why-frame">
+
+    <div class="why-head" data-reveal>
+      <div class="why-eyebrow">
+        <span class="slashes">//</span>
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M11 3c-1.5 2 1.5 3 0 5M17 3c-1.5 2 1.5 3 0 5" stroke="#461e10" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M5 12h18v3h2.5a3.5 3.5 0 0 1 0 7H22.4A8 8 0 0 1 15 27h-2a8 8 0 0 1-8-8v-7Z" stroke="#461e10" stroke-width="2.5" stroke-linejoin="round"/>
+        </svg>
+        <span>Why Koffi Exists</span>
+        <span class="slashes flip">//</span>
+      </div>
+      <h2 class="why-title">
+        Coffee that gives you<br />
+        <span class="hl2">space to breathe</span>
+      </h2>
+      <p class="why-sub">Because great flavour deserves room, and so do you.</p>
+    </div>
+
+    <div class="why-cards">
+      <article class="why-card card-1" data-reveal>
+        <div>
+          <h3>Crafted for Calm</h3>
+          <p>Blends designed for people who want ritual without rush.</p>
+        </div>
+        <img class="card-icon" src="assets/hand-heart.svg" alt="Hand drawing a heart" />
+      </article>
+
+      <article class="why-card card-2" data-reveal>
+        <img class="card-icon" src="assets/hand-clac.svg" alt="Hand making a peace sign" />
+        <div>
+          <h3>Flavour Without the Fuss</h3>
+          <p>Smooth, bold taste minus the noise and crowded café energy.</p>
+        </div>
+      </article>
+
+      <article class="why-card card-3" data-reveal>
+        <div>
+          <h3>Comfort in Every Cup</h3>
+          <p>A soothing brew for all who prefer breathing room over bustle.</p>
+        </div>
+        <img class="card-icon" src="assets/hand-hello.svg" alt="Waving hand emerging from a hole" />
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee panel" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Koffi <b>&#10022;</b> space to breathe <b>&#10022;</b> room in every sip <b>&#10022;</b> no small places <b>&#10022;</b></span>
+    <span>Koffi <b>&#10022;</b> space to breathe <b>&#10022;</b> room in every sip <b>&#10022;</b> no small places <b>&#10022;</b></span>
+    <span>Koffi <b>&#10022;</b> space to breathe <b>&#10022;</b> room in every sip <b>&#10022;</b> no small places <b>&#10022;</b></span>
+    <span>Koffi <b>&#10022;</b> space to breathe <b>&#10022;</b> room in every sip <b>&#10022;</b> no small places <b>&#10022;</b></span>
+  </div>
+</div>
+
+<!-- ============ BLENDS / SHOP ============ -->
+<section class="blends panel" id="shop">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow" style="color: var(--choc);">
+      <span>//</span><span>Blends With Breathing Room</span><span class="flip">//</span>
+    </div>
+    <h2 class="section-title">Pick the pace <span class="hl2">your day</span> deserves</h2>
+    <p class="section-sub">Three blends, zero rush. Roasted for people who take the long way to the kettle.</p>
+  </div>
+
+  <div class="blend-grid">
+    <article class="blend-card" data-reveal>
+      <svg viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M35 30 L115 30 L112 22 L38 22 Z" fill="#461e10"/>
+        <path d="M30 34 h90 c4 0 7 3 7 8 l-6 108 c-1 8 -7 14 -15 14 H44 c-8 0 -14 -6 -15 -14 L23 42 c0 -5 3 -8 7 -8 Z" fill="#f7f4ec" stroke="#461e10" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M36 76 h78 l-2 34 H38 Z" fill="#09543d" stroke="#461e10" stroke-width="3.5"/>
+        <text x="75" y="99" text-anchor="middle" fill="#ffffff" font-family="Nimbu Local, Shrikhand, cursive" font-size="15" letter-spacing="1">KOFFI</text>
+        <path d="M55 128 q20 8 40 0" stroke="#461e10" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="47" cy="56" r="3" fill="#461e10"/><circle cx="60" cy="52" r="3" fill="#461e10"/><circle cx="73" cy="56" r="3" fill="#461e10"/>
+      </svg>
+      <h3 class="blend-name">Slow Morning</h3>
+      <p class="blend-notes">Honey, fig, and absolutely no alarm clocks. A soft start in a cup.</p>
+      <div class="blend-buy">
+        <span class="blend-price">$18</span>
+        <a class="btn btn-pink btn-small" href="#">Add to mug</a>
+      </div>
+    </article>
+
+    <article class="blend-card" data-reveal>
+      <svg viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M35 30 L115 30 L112 22 L38 22 Z" fill="#461e10"/>
+        <path d="M30 34 h90 c4 0 7 3 7 8 l-6 108 c-1 8 -7 14 -15 14 H44 c-8 0 -14 -6 -15 -14 L23 42 c0 -5 3 -8 7 -8 Z" fill="#f7f4ec" stroke="#461e10" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M36 76 h78 l-2 34 H38 Z" fill="#ffa9e9" stroke="#461e10" stroke-width="3.5"/>
+        <text x="75" y="99" text-anchor="middle" fill="#461e10" font-family="Nimbu Local, Shrikhand, cursive" font-size="15" letter-spacing="1">KOFFI</text>
+        <path d="M50 55 q6 -10 12 0 q6 -10 12 0 q6 -10 12 0" stroke="#461e10" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M55 128 q20 8 40 0" stroke="#461e10" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+      <h3 class="blend-name">Open Air</h3>
+      <p class="blend-notes">Bright citrus with room to roam. Best sipped near a very open window.</p>
+      <div class="blend-buy">
+        <span class="blend-price">$19</span>
+        <a class="btn btn-pink btn-small" href="#">Add to mug</a>
+      </div>
+    </article>
+
+    <article class="blend-card" data-reveal>
+      <svg viewBox="0 0 150 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M35 30 L115 30 L112 22 L38 22 Z" fill="#461e10"/>
+        <path d="M30 34 h90 c4 0 7 3 7 8 l-6 108 c-1 8 -7 14 -15 14 H44 c-8 0 -14 -6 -15 -14 L23 42 c0 -5 3 -8 7 -8 Z" fill="#09543d" stroke="#461e10" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M36 76 h78 l-2 34 H38 Z" fill="#f7f4ec" stroke="#461e10" stroke-width="3.5"/>
+        <text x="75" y="99" text-anchor="middle" fill="#461e10" font-family="Nimbu Local, Shrikhand, cursive" font-size="15" letter-spacing="1">KOFFI</text>
+        <path d="M50 52 c8 6 16 6 24 0 c8 6 16 6 24 0" stroke="#f7f4ec" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M55 128 q20 8 40 0" stroke="#f7f4ec" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+      <h3 class="blend-name">Deep Breath</h3>
+      <p class="blend-notes">Dark cocoa and a long, calm finish. For evenings with high ceilings.</p>
+      <div class="blend-buy">
+        <span class="blend-price">$21</span>
+        <a class="btn btn-pink btn-small" href="#">Add to mug</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ RITUAL ============ -->
+<section class="ritual panel" id="mug">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span>//</span><span>Make Your Mug Happy</span><span class="flip">//</span>
+    </div>
+    <h2 class="section-title">The Koffi ritual</h2>
+    <p class="section-sub">Three steps. None of them fast.</p>
+  </div>
+
+  <div class="ritual-steps">
+    <div class="step" data-reveal>
+      <span class="step-num">1</span>
+      <h3>Pick your blend</h3>
+      <p>Choose the pace you want your day to take. There are no wrong answers, only rushed ones.</p>
+    </div>
+    <div class="step" data-reveal>
+      <span class="step-num">2</span>
+      <h3>Brew it slow</h3>
+      <p>Four minutes of doing absolutely nothing else. The steam needs somewhere to go — so do your thoughts.</p>
+    </div>
+    <div class="step" data-reveal>
+      <span class="step-num">3</span>
+      <h3>Sip with space</h3>
+      <p>Find the biggest room in the house. Sit near the door if it helps. Breathe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VOICES ============ -->
+<section class="voices panel">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow" style="color: var(--choc);">
+      <span>//</span><span>Overheard At Very Large Tables</span><span class="flip">//</span>
+    </div>
+    <h2 class="section-title">People love the <span class="hl2">extra room</span></h2>
+  </div>
+
+  <div class="voices-marquee" data-reveal>
+    <div class="voices-track">
+      <div class="voices-group">
+        <article class="voice-card">
+          <p class="voice-quote">"I came for the guy in the enormous jacket. I stayed because my mornings finally have <mark>room to breathe</mark>."</p>
+          <p class="voice-who">Amara O. <span>Drinks it on the porch, door open</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"The first coffee that has never once rushed me. Even the <mark>steam moves slowly</mark>."</p>
+          <p class="voice-who">Tunde A. <span>Professional slow sipper</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"My mug has never been happier. Neither, frankly, <mark>have I</mark>."</p>
+          <p class="voice-who">June K. <span>Avoids corner seats since 2024</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"Tastes like a Saturday with <mark>nothing planned</mark>. I've started cancelling things just to finish the cup."</p>
+          <p class="voice-who">Priya S. <span>Cancels Monday meetings</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"I moved my desk to face the window. The coffee <mark>made me do it</mark>."</p>
+          <p class="voice-who">Kofi B. <span>Window-seat evangelist</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"We stopped whispering in the kitchen. The Koffi said <mark>we didn't have to</mark>."</p>
+          <p class="voice-who">Leo M. <span>Reformed café crammer</span></p>
+        </article>
+      </div>
+      <div class="voices-group" aria-hidden="true">
+        <article class="voice-card">
+          <p class="voice-quote">"I came for the guy in the enormous jacket. I stayed because my mornings finally have <mark>room to breathe</mark>."</p>
+          <p class="voice-who">Amara O. <span>Drinks it on the porch, door open</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"The first coffee that has never once rushed me. Even the <mark>steam moves slowly</mark>."</p>
+          <p class="voice-who">Tunde A. <span>Professional slow sipper</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"My mug has never been happier. Neither, frankly, <mark>have I</mark>."</p>
+          <p class="voice-who">June K. <span>Avoids corner seats since 2024</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"Tastes like a Saturday with <mark>nothing planned</mark>. I've started cancelling things just to finish the cup."</p>
+          <p class="voice-who">Priya S. <span>Cancels Monday meetings</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"I moved my desk to face the window. The coffee <mark>made me do it</mark>."</p>
+          <p class="voice-who">Kofi B. <span>Window-seat evangelist</span></p>
+        </article>
+        <article class="voice-card">
+          <p class="voice-quote">"We stopped whispering in the kitchen. The Koffi said <mark>we didn't have to</mark>."</p>
+          <p class="voice-who">Leo M. <span>Reformed café crammer</span></p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIG CTA ============ -->
+<section class="cta panel">
+  <h2 class="cta-title" data-reveal>Give yourself<br />some <span class="hl">space.</span></h2>
+  <p class="cta-sub" data-reveal style="transition-delay: 0.08s;">Free shipping on every order. Elbow room included.</p>
+  <a class="btn btn-pink" href="#shop">Shop our KOFFI</a>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer panel">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <path id="tag-blob" d="M24 32 C26 14 44 6 58 14 C66 2 86 2 94 12 C104 0 124 0 134 12 C142 2 162 2 170 14 C184 6 202 14 206 32 C222 38 222 56 206 62 C202 80 184 88 170 78 C162 90 142 90 134 80 C124 92 104 92 94 80 C86 90 66 90 58 78 C44 88 26 80 24 62 C8 56 8 38 24 32 Z"/>
+    </defs>
+  </svg>
+
+  <div class="footer-hero">
+    <h2>Thanks for stopping by.<br />Now go find some space.</h2>
+    <svg class="cup" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M11 3c-1.5 2 1.5 3 0 5M17 3c-1.5 2 1.5 3 0 5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <path d="M5 12h18v3h2.5a3.5 3.5 0 0 1 0 7H22.4A8 8 0 0 1 15 27h-2a8 8 0 0 1-8-8v-7Z" fill="#fff"/>
+      <path d="M23 17.5h2.3a1.7 1.7 0 0 1 0 3.4H23v-3.4Z" fill="#09543d"/>
+    </svg>
+  </div>
+
+  <div class="footer-div" aria-hidden="true"></div>
+
+  <div class="footer-top">
+    <div>
+      <a class="logo" href="#" aria-label="Koffi home">
+        <img class="logo-mark" src="assets/logo-mark.svg" alt="" />
+        <span class="logo-word">KOFFI</span>
+      </a>
+      <p class="footer-tag">Coffee that gives you space to breathe. Roasted in small batches, never in small places.</p>
+    </div>
+    <div class="footer-links">
+      <div>
+        <h4>Shop</h4>
+        <a href="#shop">Slow Morning</a>
+        <a href="#shop">Open Air</a>
+        <a href="#shop">Deep Breath</a>
+      </div>
+      <div>
+        <h4>Koffi</h4>
+        <a href="#blends">Why Koffi exists</a>
+        <a href="#mug">The ritual</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Koffi. Brewed with room to breathe.</span>
+    <span>// no small places \\</span>
+  </div>
+
+  <div class="footer-tags" aria-hidden="true">
+    <!-- upper row -->
+    <span class="tag" style="--tag:#ffa9e9; --rot:-8deg;  --w:200px; left: -2%; bottom: 120px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Small Places</s></span>
+    <span class="tag" style="--tag:#8fd8b8; --rot:-4deg;  --w:185px; left: 12%; bottom: 130px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Tiny Tables</s></span>
+    <span class="tag" style="--tag:#ffd66b; --rot:7deg;   --w:195px; left: 26%; bottom: 118px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Desk Lunches</s></span>
+    <span class="tag" style="--tag:#ffa9e9; --rot:-6deg;  --w:210px; left: 40%; bottom: 132px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Crowded Cafés</s></span>
+    <span class="tag" style="--tag:#f7f4ec; --rot:-10deg; --w:180px; left: 55%; bottom: 120px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Queue Chaos</s></span>
+    <span class="tag" style="--tag:#ff8a65; --rot:5deg;   --w:190px; left: 68%; bottom: 130px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Waiting Rooms</s></span>
+    <span class="tag" style="--tag:#8fd8b8; --rot:-3deg;  --w:195px; left: 83%; bottom: 118px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Standing Room</s></span>
+    <!-- lower row -->
+    <span class="tag" style="--tag:#f7f4ec; --rot:5deg;   --w:215px; left: 4%;  bottom: 15px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Rushed Mornings</s></span>
+    <span class="tag" style="--tag:#ffffff; --rot:8deg;   --w:175px; left: 19%; bottom: 8px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>5-Min Breaks</s></span>
+    <span class="tag" style="--tag:#ffd66b; --rot:-7deg;  --w:200px; left: 32%; bottom: 18px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Loud Blenders</s></span>
+    <span class="tag" style="--tag:#ff8a65; --rot:4deg;   --w:190px; left: 47%; bottom: 10px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Corner Seats</s></span>
+    <span class="tag" style="--tag:#ffa9e9; --rot:-5deg;  --w:185px; left: 61%; bottom: 20px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Packed Trains</s></span>
+    <span class="tag" style="--tag:#8fd8b8; --rot:9deg;   --w:200px; left: 74%; bottom: 8px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Espresso Lines</s></span>
+    <span class="tag" style="--tag:#f7f4ec; --rot:-4deg;  --w:185px; left: 88%; bottom: 16px;"><svg viewBox="0 0 230 92"><use href="#tag-blob"/></svg><s>Elbow Wars</s></span>
+  </div>
+</footer>
+
+<script>
+  // Scroll-reveal: hidden state only applies when JS is running (no content lost without it)
+  document.documentElement.classList.add("js");
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const targets = document.querySelectorAll("[data-reveal]");
+
+  if (reduced || !("IntersectionObserver" in window)) {
+    targets.forEach(el => el.classList.add("in"));
+  } else {
+    const io = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    targets.forEach(el => io.observe(el));
+  }
+
+  // Logo coin-flip: butterfly -> coffee cup, once on landing, then at random moments
+  const logo = document.querySelector(".nav .logo");
+  if (logo) {
+    const flip = () => {
+      logo.classList.add("flipped");
+      setTimeout(() => logo.classList.remove("flipped"), 1500);
+    };
+    const scheduleRandom = () => {
+      setTimeout(() => { flip(); scheduleRandom(); }, 7000 + Math.random() * 9000);
+    };
+    setTimeout(flip, 1000);     // first flip shortly after landing
+    if (!reduced) scheduleRandom();
+  }
+
+  // Footer tags scatter away from the cursor
+  const tagField = document.querySelector(".footer-tags");
+  const canHover = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (tagField && canHover && !reduced) {
+    const tags = [...tagField.querySelectorAll(".tag")];
+    const RADIUS = 190;   // how close the cursor gets before tags flee
+    const PUSH = 80;      // max flee distance in px
+
+    const update = (mx, my) => {
+      for (const tag of tags) {
+        const r = tag.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = cx - mx;
+        const dy = cy - my;
+        const dist = Math.hypot(dx, dy) || 1;
+        const rot = getComputedStyle(tag).getPropertyValue("--rot").trim() || "0deg";
+        if (dist < RADIUS) {
+          const f = 1 - dist / RADIUS;         // stronger push the closer you get
+          const tx = (dx / dist) * f * PUSH;
+          const ty = (dy / dist) * f * PUSH;
+          tag.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot})`;
+        } else if (tag.style.transform) {
+          tag.style.transform = `translate(0px, 0px) rotate(${rot})`;
+        }
+      }
+    };
+
+    let raf = null;
+    tagField.closest(".footer").addEventListener("mousemove", e => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { update(e.clientX, e.clientY); raf = null; });
+    });
+    tagField.closest(".footer").addEventListener("mouseleave", () => {
+      tags.forEach(tag => { tag.style.transform = ""; });
+    });
+  }
+</script>
+
+</body>
+</html>
