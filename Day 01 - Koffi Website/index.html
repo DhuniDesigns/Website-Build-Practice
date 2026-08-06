@@ -817,22 +817,24 @@
     .footer-hero .cup { width: 36px; margin-top: 0; }
     .footer-div { margin: 0 0 28px; }
     .footer-top { margin: 0 0 28px; gap: 24px; }
+    /* Tight, overlapping 5-blob cluster that bleeds off the footer's own
+       rounded edges — .footer-tags stays visible (no clip of its own) so the
+       parent .footer's overflow:hidden is what crops the cluster, exactly
+       like the Figma frame crops the blobs at its boundary. */
     .footer-tags {
       position: relative;
-      height: 168px;
+      height: 150px;
       margin: 0;
-      overflow: hidden;
+      overflow: visible;
     }
-    .tag { width: calc(var(--w, 190px) * 0.7) !important; transition: none; }
-    .tag s { font-size: 10.5px; }
-    /* keep only the first 6 tags, recomposed into one tight cluster */
-    .tag:nth-child(n + 7) { display: none; }
-    .tag:nth-child(1) { left: -4% !important;  bottom: 84px !important; }
-    .tag:nth-child(2) { left: 20% !important;  bottom: 100px !important; }
-    .tag:nth-child(3) { left: 46% !important;  bottom: 82px !important; }
-    .tag:nth-child(4) { left: 68% !important;  bottom: 98px !important; }
-    .tag:nth-child(5) { left: 4% !important;   bottom: 4px !important; }
-    .tag:nth-child(6) { left: 30% !important;  bottom: 14px !important; }
+    .tag { width: calc(var(--w, 190px) * 0.82) !important; transition: none; }
+    .tag s { font-size: 11px; }
+    .tag:nth-child(n + 6) { display: none; }
+    .tag:nth-child(1) { left: -8% !important;  bottom: 92px !important;  --rot: -11deg !important; }
+    .tag:nth-child(2) { left: 42% !important;  bottom: 100px !important; --rot: 9deg !important; }
+    .tag:nth-child(3) { left: -6% !important;  bottom: -14px !important; --rot: -17deg !important; }
+    .tag:nth-child(4) { left: 26% !important;  bottom: -22px !important; --rot: 7deg !important; --tag: #ff8a65 !important; }
+    .tag:nth-child(5) { left: 58% !important;  bottom: -6px !important;  --rot: -10deg !important; }
   }
   .footer-top {
     max-width: 1185px;
