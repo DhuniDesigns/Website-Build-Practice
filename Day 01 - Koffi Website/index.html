@@ -801,17 +801,38 @@
   }
 
   @media (max-width: 700px) {
-    .footer-hero { flex-direction: column; gap: 18px; }
-    .footer-tags {
-      height: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 8px;
-      justify-content: center;
-      padding-bottom: 30px;
+    /* Shorter mobile footer, matching the compact reference layout:
+       headline left-aligned with the cup at its side, and a small
+       tag cluster instead of a full-width field of 14 shapes. */
+    .footer { padding: 56px 22px 0; }
+    .footer-hero {
+      max-width: 100%;
+      margin: 0 0 28px;
+      align-items: flex-end;
+      justify-content: flex-start;
+      text-align: left;
+      gap: 14px;
     }
-    .tag { position: static; --w: 140px; }
-    .tag s { font-size: 10px; }
+    .footer-hero h2 { font-size: clamp(24px, 7.5vw, 32px); }
+    .footer-hero .cup { width: 36px; margin-top: 0; }
+    .footer-div { margin: 0 0 28px; }
+    .footer-top { margin: 0 0 28px; gap: 24px; }
+    .footer-tags {
+      position: relative;
+      height: 168px;
+      margin: 0;
+      overflow: hidden;
+    }
+    .tag { width: calc(var(--w, 190px) * 0.7) !important; transition: none; }
+    .tag s { font-size: 10.5px; }
+    /* keep only the first 6 tags, recomposed into one tight cluster */
+    .tag:nth-child(n + 7) { display: none; }
+    .tag:nth-child(1) { left: -4% !important;  bottom: 84px !important; }
+    .tag:nth-child(2) { left: 20% !important;  bottom: 100px !important; }
+    .tag:nth-child(3) { left: 46% !important;  bottom: 82px !important; }
+    .tag:nth-child(4) { left: 68% !important;  bottom: 98px !important; }
+    .tag:nth-child(5) { left: 4% !important;   bottom: 4px !important; }
+    .tag:nth-child(6) { left: 30% !important;  bottom: 14px !important; }
   }
   .footer-top {
     max-width: 1185px;
@@ -924,6 +945,91 @@
     .blend-card:hover svg { animation: bag-wobble 0.7s ease-in-out; }
     .step:hover .step-num { transform: rotate(0deg) scale(1.06); }
   }
+
+  /* Touch equivalents: same visual outcome as hover, triggered by a JS-applied
+     class on tap/hold — phones have no hover, but the delight shouldn't skip them */
+  .why-card.tap-active { --hy: -8px; --r: 0deg; z-index: 5; }
+  .voice-card.tap-active { --s: 1.05; --r: 0deg; z-index: 5; box-shadow: 0 14px 30px rgba(59, 35, 16, 0.09); }
+  .blend-card.tap-active { --r: 0deg; --hy: -6px; }
+  .card-1.tap-active .card-icon { animation: icon-draw 0.9s ease-in-out; }
+  .card-2.tap-active .card-icon { animation: icon-snap 0.7s var(--ease-spring); }
+  .card-3.tap-active .card-icon { animation: icon-wave 0.9s ease-in-out; }
+  .blend-card.tap-active svg { animation: bag-wobble 0.7s ease-in-out; }
+  .step.tap-active .step-num { transform: rotate(0deg) scale(1.06); }
+
+  /* ============ MOBILE FLOATING BAR: quick nav + back-to-top ============ */
+  .mobile-bar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    z-index: 60;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 8px 8px 16px;
+    border-radius: 999px;
+    background: rgba(9, 84, 61, 0.72);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transform: translateY(140%) scale(0.94);
+    opacity: 0;
+    transition: transform 0.45s var(--ease-spring), opacity 0.3s var(--ease-out-quart);
+  }
+  .mobile-bar.show { transform: translateY(0) scale(1); opacity: 1; }
+  .mobile-bar.show.hide-on-scroll { transform: translateY(140%) scale(0.98); opacity: 0; }
+  .mobile-bar .mb-logo { display: flex; align-items: center; gap: 7px; color: var(--white); text-decoration: none; }
+  .mobile-bar .mb-logo img { width: 18px; height: 18px; display: block; }
+  .mobile-bar .mb-logo span {
+    font-family: "Joti One", cursive;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .mobile-bar .mb-actions { display: flex; align-items: center; gap: 8px; }
+  .mb-shop {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--choc);
+    background: var(--pink);
+    padding: 11px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 1.5px 1.5px 0 0.75px var(--choc);
+    transition: transform 0.15s var(--ease-out-quart);
+  }
+  .mb-shop:active { transform: scale(0.94); }
+  .mb-top {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    transition: transform 0.15s var(--ease-out-quart), background 0.2s ease;
+  }
+  .mb-top:active { transform: scale(0.86); background: rgba(255, 255, 255, 0.28); }
+  .mb-top svg { width: 16px; height: 16px; }
+
+  @media (max-width: 640px) {
+    .mobile-bar { display: flex; }
+    body { padding-bottom: 84px; } /* keep the floating bar from covering the footer */
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-bar { transition: opacity 0.2s ease; transform: translateY(140%) !important; }
+    .mobile-bar.show { transform: translateY(0) !important; }
+  }
+
   @media (max-width: 560px) {
     .blends, .ritual, .voices, .cta { padding: 60px 20px; }
     .marquee { padding: 14px 0; }
@@ -956,6 +1062,22 @@
 </style>
 </head>
 <body>
+
+<!-- Floating mobile quick-nav: appears while scrolling, hides on scroll-down, shows on scroll-up -->
+<div class="mobile-bar" aria-hidden="true">
+  <a class="mb-logo" href="#" aria-label="Back to top">
+    <img src="assets/logo-mark.svg" alt="" />
+    <span>Koffi</span>
+  </a>
+  <div class="mb-actions">
+    <a class="mb-shop" href="#shop">Shop</a>
+    <button class="mb-top" type="button" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
 
 <header class="hero">
   <div class="hero-inner">
@@ -1377,6 +1499,117 @@
       tags.forEach(tag => { tag.style.transform = ""; });
     });
   }
+
+  const isTouch = matchMedia("(hover: none)").matches;
+
+  // Touch equivalents for hover-only micro-interactions: a press-and-hold on
+  // a card plays the same lift/character animation a mouse hover would.
+  if (isTouch) {
+    document.querySelectorAll(".why-card, .blend-card, .voice-card, .step").forEach(el => {
+      el.addEventListener("touchstart", () => el.classList.add("tap-active"), { passive: true });
+      const release = () => setTimeout(() => el.classList.remove("tap-active"), 550);
+      el.addEventListener("touchend", release);
+      el.addEventListener("touchcancel", release);
+    });
+
+    // Tap the logo to flip it too (random auto-flip already covers hover-less devices,
+    // but a direct tap should feel instantly responsive — Apple's "respond on press").
+    const navLogo = document.querySelector(".nav .logo");
+    navLogo?.addEventListener("touchstart", () => {
+      navLogo.classList.add("flipped");
+      navLogo.style.transform = "scale(1.1)";
+    }, { passive: true });
+    navLogo?.addEventListener("touchend", () => {
+      setTimeout(() => {
+        navLogo.classList.remove("flipped");
+        navLogo.style.transform = "";
+      }, 500);
+    });
+  }
+
+  // Light haptic tap feedback on primary buttons (feature-detected, mobile only)
+  if ("vibrate" in navigator) {
+    document.querySelectorAll(".btn, .mb-shop, .mb-top").forEach(btn => {
+      btn.addEventListener("touchstart", () => {
+        try { navigator.vibrate(8); } catch (err) { /* ignore */ }
+      }, { passive: true });
+    });
+  }
+
+  // Testimonial rail: real 1:1 touch-drag scrubbing (Apple "direct manipulation").
+  // On release, the auto-scroll resumes from the exact spot the drag left it —
+  // no jump, no restart (Apple "interruptibility": animate from the presentation value).
+  (function () {
+    const wrap = document.querySelector(".voices-marquee");
+    const track = document.querySelector(".voices-track");
+    if (!wrap || !track) return;
+
+    const DURATION = 45; // must match the CSS "marquee 45s linear infinite"
+    let startX = 0, baseX = 0, dragging = false, groupWidth = 0;
+
+    const currentX = () => {
+      const m = new DOMMatrixReadOnly(getComputedStyle(track).transform);
+      return m.m41;
+    };
+    const measure = () => { groupWidth = track.scrollWidth / 2 || 1; };
+    measure();
+    window.addEventListener("resize", measure);
+
+    wrap.addEventListener("touchstart", (e) => {
+      dragging = true;
+      baseX = currentX();
+      startX = e.touches[0].clientX;
+      track.style.animation = "none";
+      track.style.transform = `translateX(${baseX}px)`;
+    }, { passive: true });
+
+    wrap.addEventListener("touchmove", (e) => {
+      if (!dragging) return;
+      const dx = e.touches[0].clientX - startX;
+      track.style.transform = `translateX(${baseX + dx}px)`;
+    }, { passive: true });
+
+    const release = () => {
+      if (!dragging) return;
+      dragging = false;
+      const x = currentX();
+      const progressPx = ((-x % groupWidth) + groupWidth) % groupWidth;
+      const fraction = progressPx / groupWidth;
+      track.style.transform = "";
+      track.style.animation = reduced ? "none" : `marquee ${DURATION}s linear infinite`;
+      track.style.animationDelay = `-${fraction * DURATION}s`;
+    };
+    wrap.addEventListener("touchend", release);
+    wrap.addEventListener("touchcancel", release);
+  })();
+
+  // Floating mobile bar: materializes after the hero, hides while scrolling down,
+  // reappears on the way back up. Its button scrolls smoothly to top.
+  (function () {
+    const bar = document.querySelector(".mobile-bar");
+    if (!bar) return;
+    let lastY = window.scrollY, ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      const heroH = document.querySelector(".hero")?.offsetHeight || 600;
+      if (y > heroH * 0.55) {
+        bar.classList.add("show");
+        bar.classList.toggle("hide-on-scroll", y > lastY && y - lastY > 4);
+      } else {
+        bar.classList.remove("show");
+      }
+      lastY = y;
+      ticking = false;
+    };
+    window.addEventListener("scroll", () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+
+    const toTop = () => window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    bar.querySelector(".mb-top")?.addEventListener("click", toTop);
+    bar.querySelector(".mb-logo")?.addEventListener("click", (e) => { e.preventDefault(); toTop(); });
+  })();
 </script>
 
 </body>
