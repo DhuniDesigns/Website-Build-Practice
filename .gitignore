@@ -2,3 +2,6 @@
 node_modules/
 *.log
 .preview_tmp/
+Day 01 - Koffi Website/deploy-*.zip
+Day 01 - Koffi Website/koffi-deploy-latest.zip
+Day 01 - Koffi Website/*.lnk

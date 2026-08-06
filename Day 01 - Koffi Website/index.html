@@ -823,18 +823,20 @@
        like the Figma frame crops the blobs at its boundary. */
     .footer-tags {
       position: relative;
-      height: 150px;
-      margin: 0;
+      height: 130px;
+      margin: 22px 0 0;
       overflow: visible;
     }
     .tag { width: calc(var(--w, 190px) * 0.82) !important; transition: none; }
     .tag s { font-size: 11px; }
     .tag:nth-child(n + 6) { display: none; }
-    .tag:nth-child(1) { left: -8% !important;  bottom: 92px !important;  --rot: -11deg !important; }
-    .tag:nth-child(2) { left: 42% !important;  bottom: 100px !important; --rot: 9deg !important; }
-    .tag:nth-child(3) { left: -6% !important;  bottom: -14px !important; --rot: -17deg !important; }
-    .tag:nth-child(4) { left: 26% !important;  bottom: -22px !important; --rot: 7deg !important; --tag: #ff8a65 !important; }
-    .tag:nth-child(5) { left: 58% !important;  bottom: -6px !important;  --rot: -10deg !important; }
+    /* One interlocking diagonal cascade — each blob overlaps the next
+       so the cluster reads as a single chain, not two separate rows. */
+    .tag:nth-child(3) { left: -6% !important; bottom: -8px  !important; --rot: -14deg !important; }
+    .tag:nth-child(1) { left: 9%  !important; bottom: 34px  !important; --rot: -9deg  !important; }
+    .tag:nth-child(4) { left: 27% !important; bottom: -14px !important; --rot: 7deg   !important; --tag: #ff8a65 !important; }
+    .tag:nth-child(2) { left: 44% !important; bottom: 46px  !important; --rot: 8deg   !important; }
+    .tag:nth-child(5) { left: 58% !important; bottom: 6px   !important; --rot: -8deg  !important; }
   }
   .footer-top {
     max-width: 1185px;
@@ -1052,7 +1054,12 @@
     .footer { padding: 44px 22px 24px; }
     .footer-links { gap: 32px; }
     .footer-links a { line-height: 38px; } /* comfortable touch targets */
-    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+    }
   }
 
   /* Mobile ergonomics */
