@@ -460,33 +460,35 @@ a {
   }
 }
 
-/* ---------- mobile: stack content, hide the confetti field ----------
-   Below this point the heading/nav stack tall enough that the blob
-   cluster (positioned from the canvas's *width*, not its height)
-   would start drifting up into the text, so we drop it and simplify
-   to the stacked content only. */
+/* ---------- mobile: stacked columns, compact tag cluster ----------
+   Matches Figma's "Footer - Mobile" frame (node 169:1203): the
+   headline stays a single row with the hand icon (wrapping to 4
+   lines instead of 2, icon fixed on the right — same row layout as
+   desktop, just narrower), Quick Links/Products sit two-up with
+   Company wrapping to its own row underneath (plain flex-wrap on
+   .footer-nav-groups already does this once nothing forces a single
+   column), and only 6 of the 13 blobs show, pulled in tight as a
+   bottom-left cluster instead of the full-width desktop spread — one
+   of them (Advertisement) deliberately bleeds past the left edge,
+   clipped by the canvas's overflow:hidden, the way it does in Figma. */
 @media (max-width: 760px) {
   .footer-canvas {
-    padding: 56px 24px 64px;
-  }
-
-  .footer-blobs {
-    display: none;
+    padding: 56px 24px 170px;
   }
 
   .footer-head {
-    flex-direction: column;
-    gap: 16px;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .footer-title {
-    font-size: clamp(28px, 8vw, 38px);
+    font-size: clamp(26px, 7.5vw, 36px);
   }
 
   .footer-head-icon {
-    align-self: flex-end;
-    width: 48px;
-    height: 63px;
+    width: 38px;
+    height: 50px;
+    margin-top: 6px;
   }
 
   .footer-columns {
@@ -495,8 +497,23 @@ a {
   }
 
   .footer-nav-groups {
-    gap: 32px 40px;
+    gap: 32px 28px;
   }
+
+  /* Only these six stay — Marketing, Branding, Sales, Website Dev,
+     Strategy, Advertisement — matching what's visible in the Figma
+     mobile frame; the rest are the same 13 assets used on desktop,
+     just not part of this smaller cluster. */
+  .blob-4, .blob-6, .blob-7, .blob-8, .blob-10, .blob-11, .blob-13 {
+    display: none;
+  }
+
+  .blob-9  { left: -8%; bottom: 3%;  width: 26%; z-index: 1; }
+  .blob-1  { left: 2%;  bottom: 0%;  width: 34%; z-index: 2; }
+  .blob-2  { left: 30%; bottom: 1%;  width: 28%; z-index: 3; }
+  .blob-12 { left: 34%; bottom: 13%; width: 30%; z-index: 4; }
+  .blob-5  { left: 54%; bottom: 2%;  width: 30%; z-index: 5; }
+  .blob-3  { left: 58%; bottom: 15%; width: 26%; z-index: 6; }
 }
 
 @media (max-width: 480px) {
@@ -505,7 +522,7 @@ a {
   }
 
   .footer-canvas {
-    padding: 40px 18px 48px;
+    padding: 40px 18px 150px;
   }
 
   .footer-title {
@@ -513,8 +530,7 @@ a {
   }
 
   .footer-nav-groups {
-    flex-direction: column;
-    gap: 28px;
+    gap: 24px 20px;
   }
 
   .footer-brand-tagline {
