@@ -1,5 +1,5 @@
 /* =========================================================
-   NYTA — Day 06 (recreated from Figma "NYTA Agency", Desktop - 5)
+   NYTA — Day 07 (recreated from Figma "NYTA Agency", Desktop - 5)
    Design frame: 1440px wide, 32px side gutters, 1376px content
    ========================================================= */
 
@@ -384,18 +384,21 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
    CAMPAIGN HIGHLIGHTS   (1024px, mist, collage)
    ========================================================= */
 .campaigns { background: var(--mist); overflow: hidden; }
+/* every position is the Figma px value / 1440, so the collage scales as one piece */
 .campaigns__stage {
   position: relative;
+  width: 100%;
   max-width: var(--frame);
-  height: 1024px;
+  aspect-ratio: 1440 / 1024;
   margin-inline: auto;
+  container-type: inline-size;
 }
 .campaigns__title {
   position: absolute;
-  top: calc(50% - 137px);
+  top: calc(50% - 9.514cqi);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 100px;
+  font-size: 6.944cqi;           /* 100px @ 1440 */
   font-weight: 700;
   line-height: normal;
   text-transform: uppercase;
@@ -406,7 +409,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .campaign {
   position: absolute;
-  width: 442px;
+  width: 30.694cqi;              /* 442px @ 1440 */
   will-change: transform;
 }
 .campaign__img { overflow: hidden; background: #e9e9ec; }
@@ -423,9 +426,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   line-height: normal;
   color: var(--ink);
 }
-.campaign--a { left: 149px; top: 297px; }   /* centred vertically */
-.campaign--b { left: 732px; top: 713px; }   /* runs off the bottom edge */
-.campaign--c { left: 849px; top: 0; }       /* runs off the top edge */
+.campaign--a { left: 10.347cqi; top: 20.625cqi; }  /* 149, 297 - centred vertically */
+.campaign--b { left: 50.833cqi; top: 49.514cqi; }  /* 732, 713 - runs off the bottom */
+.campaign--c { left: 58.958cqi; top: 0; }          /* 849 - runs off the top */
 
 /* =========================================================
    SERVICES   (1024px, mist → white)
@@ -529,8 +532,13 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   box-shadow: 0 313px 87px 0 rgba(0, 0, 0, 0), 0 13px 27px 0 rgba(0, 0, 0, 0.1);
 }
 /* the two outer cards are cut by the frame edge in the design */
-.talent--edge-l img { width: 117px; margin-left: auto; }
-.talent--edge-r img { width: 117px; }
+.talent--edge-l.is-partial img { width: 117px; margin-left: auto; }
+.talent--edge-r.is-partial img { width: 117px; }
+
+/* case card with no photo yet */
+.case__img--empty { display: grid; place-items: center; }
+.case__img--empty::after { content: "Image coming soon"; font-size: 14px; font-weight: 500; color: var(--muted); }
+.case__img--empty:has(img)::after { content: none; }
 
 /* =========================================================
    CASE STUDIES   (1024px, white → mist)
@@ -654,81 +662,217 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* =========================================================
    RESPONSIVE
+   1440+ ......... Figma frame, centred
+   1025–1439 ..... same layout, fluid
+   761–1024 ...... tablet
+   ≤760 .......... phone
    ========================================================= */
+
+/* ---------- small laptops ---------- */
 @media (max-width: 1200px) {
   .hero__title br { display: none; }
-  .campaigns__stage { height: auto; padding: 80px var(--gutter); display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
-  .campaigns__title {
-    position: static; transform: none; grid-column: 1 / -1;
-    font-size: clamp(44px, 8vw, 100px); color: var(--ink); text-align: left; white-space: normal; margin-bottom: 16px;
-  }
-  .campaign { position: static; width: auto; transform: none !important; }
-  .campaign--b { margin-top: 80px; }
+  .trusted__logos { gap: 16px; }
+  .trusted__col { width: auto; flex: 1; }
 }
 
+/* ---------- tablet ---------- */
 @media (max-width: 1024px) {
+  .hero__intro { padding-top: 150px; min-height: 0; padding-bottom: 64px; }
+
+  /* trusted */
+  .trusted { padding: 64px 0; }
   .trusted__grid { grid-template-columns: 1fr; row-gap: 40px; }
-  .trusted__logos { height: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .trusted__col { width: auto; gap: 32px; }
+  .trusted__logos { height: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .trusted__col { width: auto; gap: 28px; }
   .trusted__col img { max-width: 100%; }
 
-  .stats__row { grid-template-columns: 1fr; gap: 40px; }
-  .stat { height: auto; gap: 40px; }
+  /* stats: keep 3 columns, shorter */
+  .stats { padding: 64px 0; }
+  .stats__row { gap: 24px; }
+  .stat { height: 280px; padding: 12px 0 0 16px; }
+  .stat__label { font-size: 17px; }
+  .stat__value { font-size: clamp(48px, 7.5vw, 76px); }
 
-  .how__steps { grid-template-columns: 1fr; gap: 24px; }
+  /* how it works */
+  .how { padding: 64px 0 56px; }
+  .step__title { font-size: 20px; }
+  .step__desc { font-size: 15px; }
 
-  .reviews__track { margin-top: 64px; }
-  .services__list { margin-top: 80px; }
-  .service__desc { margin-top: 32px; }
-  .services { min-height: 0; }
+  /* testimonials */
+  .reviews { padding: 64px 0; }
+  .reviews__track { margin-top: 48px; }
+  .review { width: min(62vw, 520px); height: 320px; padding: 32px; }
 
-  .talents { padding-bottom: 80px; }
+  /* campaign collage → staggered grid */
+  .campaigns__stage {
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 20px;
+    align-items: start;
+    padding: 64px var(--gutter) 72px;
+  }
+  .campaigns__title {
+    position: static; transform: none; grid-column: 1 / -1;
+    font-size: clamp(40px, 8vw, 80px); line-height: 1; color: var(--ink);
+    text-align: left; white-space: normal; margin-bottom: 16px;
+  }
+  .campaign { position: static; width: auto; transform: none !important; }
+  .campaign--a { grid-column: 1 / -1; width: min(100%, 560px); }
+  .campaign--b { margin-top: 64px; }
+
+  /* services */
+  .services { min-height: 0; padding: 64px 0 24px; }
+  .services__list { margin-top: 64px; }
+  .service { padding-bottom: 36px; margin-bottom: 36px; }
+  .service__desc { margin-top: 28px; font-size: 18px; line-height: 26px; }
+
+  /* talents → swipeable row */
+  .talents { padding: 64px 0 72px; }
   .talents__stage { height: auto; overflow: visible; }
-  .talents__info { position: static; padding: 32px var(--gutter) 24px; }
+  .talents__info { position: static; padding: 32px var(--gutter) 20px; }
   .talents__row {
     position: static; transform: none;
     overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    padding-inline: var(--gutter);
+    padding: 8px var(--gutter) 40px;
+    scroll-padding-inline: var(--gutter);
   }
   .talents__row::-webkit-scrollbar { display: none; }
   .talent { scroll-snap-align: center; }
-  .talent--edge-l, .talent--edge-r { width: 117px; }
+  .talent.is-partial { display: none; }   /* only show cut-off cards on the full desktop frame */
 
-  .cases .slider__controls { margin-top: 48px; }
+  /* case studies */
+  .cases { padding: 64px 0 48px; }
+  .cases__track { height: auto; margin-top: 32px; }
+  .case, .case--tall { height: auto; width: min(42vw, 360px); }
+  .case__img { flex: none; aspect-ratio: 430 / 461; }
+  .case--tall .case__img { aspect-ratio: 430 / 611; }
+  .case h3 { font-size: 18px; }
+  .cases .slider__controls { margin-top: 32px; }
 
-  .contact { min-height: 0; }
-  .info { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+  /* contact */
+  .contact { min-height: 0; padding-top: 64px; }
+  .info { margin-top: 64px; grid-template-columns: repeat(2, 1fr); gap: 40px 32px; }
+  .footer { padding-top: 72px; }
 }
 
+/* ---------- phone ---------- */
 @media (max-width: 760px) {
+  /* nav: hamburger + full-width sheet */
+  .nav { top: 16px; }
   .nav__links, .nav__cta { display: none; }
   .nav__toggle {
-    display: inline-flex; flex-direction: column; justify-content: center; gap: 6px;
-    width: 32px; height: 32px;
+    display: inline-flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 7px;
+    width: 40px; height: 40px; margin-right: -4px;
   }
-  .nav__toggle span { display: block; height: 1.5px; background: var(--ink); transition: transform 0.3s var(--ease); }
-  .nav.is-open .nav__toggle span:first-child { transform: translateY(3.75px) rotate(45deg); }
-  .nav.is-open .nav__toggle span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
-  .nav.is-open .nav__links, .nav.is-open .nav__cta { display: flex; }
-  .nav.is-open { flex-wrap: wrap; row-gap: 16px; }
-  .nav.is-open .nav__left { flex-wrap: wrap; row-gap: 16px; }
-  .nav.is-open .nav__links { flex-basis: 100%; flex-direction: column; align-items: flex-start; gap: 12px; order: 3; }
+  .nav__toggle span { display: block; width: 24px; height: 1.5px; background: var(--ink); transition: transform 0.35s var(--ease); }
+  .nav.is-open {
+    position: fixed; top: 0; left: 0; transform: none;
+    flex-wrap: wrap; align-items: flex-start;
+    padding: 16px var(--gutter) 28px;
+    background: var(--white);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: sheetIn 0.4s var(--ease) both;
+  }
+  .nav.is-open .nav__left { flex: 1; flex-direction: column; align-items: flex-start; gap: 32px; }
+  .nav.is-open .nav__links { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .nav.is-open .nav__links a { font-size: 26px; }
+  .nav.is-open .nav__cta { display: block; order: 3; flex-basis: 100%; margin-top: 28px; font-size: 15px; }
+  .nav.is-open .nav__toggle span:first-child { transform: translateY(4.25px) rotate(45deg); }
+  .nav.is-open .nav__toggle span:last-child { transform: translateY(-4.25px) rotate(-45deg); }
 
-  .hero__intro { padding-top: 120px; min-height: 0; padding-bottom: 48px; }
-  .hero__title br, .hero__sub br { display: none; }
+  /* hero */
+  .hero__intro { padding-top: 112px; padding-bottom: 40px; }
+  .hero__title, .hero__sub { max-width: none; }
+  .hero__title { font-size: clamp(28px, 8.2vw, 40px); line-height: 1.15; }
+  .hero__sub { margin-top: 16px; }
+  .hero__sub br { display: none; }
+  .hero__media { height: min(118vw, 560px); }
+  .hero__media img { object-position: 30% 20%; }
 
+  .section-title { font-size: 22px; }
+
+  /* trusted */
+  .trusted { padding: 56px 0; }
+  .trusted__grid { row-gap: 32px; }
+  .trusted__logos { gap: 12px; }
+  .trusted__col { gap: 24px; }
+  .trusted__col img { max-height: 15px; width: auto; }
+
+  /* stats → stacked rows */
+  .stats { padding: 40px 0 56px; }
+  .stats__row { grid-template-columns: 1fr; gap: 28px; }
+  .stat { height: auto; gap: 20px; padding: 8px 0 4px 16px; }
+  .stat__label { font-size: 16px; max-width: 320px; }
+  .stat__value { font-size: 64px; line-height: 1; }
+
+  /* how it works */
+  .how { padding: 56px 0 48px; }
+  .how__media { margin-top: 20px; aspect-ratio: 4 / 3; }
+  .how__steps { grid-template-columns: 1fr; gap: 20px; margin-top: 24px; min-height: 0; }
+  .step__title br { display: none; }
+  .step__desc { max-width: none; }
+
+  /* testimonials */
+  .reviews { padding: 56px 0; }
+  .reviews__track { margin-top: 32px; gap: 12px; }
+  .review { width: 84vw; height: auto; min-height: 300px; padding: 24px; gap: 40px; }
+  .review blockquote { font-size: 18px; }
+
+  /* campaigns */
+  .campaigns__stage { gap: 16px 12px; padding: 56px var(--gutter); }
+  .campaigns__title { font-size: 40px; margin-bottom: 8px; }
+  .campaign--a { width: 100%; }
+  .campaign--b { margin-top: 40px; }
+  .campaign figcaption { font-size: 14px; }
+
+  /* services */
+  .services { padding: 56px 0 16px; }
+  .services__list { margin-top: 40px; }
+  .service { padding-bottom: 28px; margin-bottom: 28px; }
+  .service__row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .service h3 { font-size: 26px; }
+  .service__cta { font-size: 16px; }
+  .service__desc { margin-top: 16px; font-size: 16px; line-height: 24px; }
+
+  /* talents: smaller cards */
+  .talents { padding: 56px 0 56px; }
+  .talents__info { padding-top: 24px; }
+  .talents__row { gap: 12px; }
+  .talent { width: 150px; height: 172px; }
+  .talent--featured { width: 220px; height: 326px; }
+
+  /* case studies */
+  .cases { padding: 56px 0 40px; }
+  .cases__all { font-size: 16px; }
+  .case, .case--tall { width: 72vw; }
+
+  /* contact */
+  .contact { padding-top: 56px; }
+  .form__row { grid-template-columns: 1fr; }
+  .field textarea { height: 120px; }
+  .form__foot { flex-wrap: wrap; gap: 12px; }
+  .info { margin-top: 48px; grid-template-columns: 1fr 1fr; gap: 32px 20px; }
+  .info__col { font-size: 16px; gap: 10px; }
+  .info__col:first-child { grid-column: 1 / -1; }
+  .footer { flex-direction: column; align-items: flex-start; padding-top: 56px; padding-bottom: 32px; gap: 16px; }
+  .footer__links { gap: 24px; }
+}
+
+/* ---------- small phones ---------- */
+@media (max-width: 400px) {
+  .info { grid-template-columns: 1fr; }
   .campaigns__stage { grid-template-columns: 1fr; }
   .campaign--b { margin-top: 0; }
+}
 
-  .service__row { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .review { height: 320px; padding: 28px; }
-  .cases__track { height: auto; }
-  .case, .case--tall { height: auto; }
-  .case__img { aspect-ratio: 430 / 520; }
+@keyframes sheetIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
 
-  .form__row { grid-template-columns: 1fr; }
-  .info { grid-template-columns: 1fr; }
-  .footer { flex-direction: column; align-items: flex-start; }
+/* hover effects only where a real pointer exists */
+@media (hover: none) {
+  .talent:not(.talent--featured):hover { transform: none; }
+  .service:hover h3 { transform: none; }
+  .review:hover { background: transparent; border-color: var(--line); }
 }
 
 @media (prefers-reduced-motion: reduce) {

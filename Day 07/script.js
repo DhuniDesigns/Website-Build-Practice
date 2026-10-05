@@ -189,7 +189,7 @@
   const parallaxEls = [...document.querySelectorAll('[data-parallax]')];
   const campaigns = document.querySelector('.campaigns');
   function parallax() {
-    if (window.innerWidth <= 1200) return;
+    if (window.innerWidth <= 1024) return;
     const r = campaigns.getBoundingClientRect();
     const centerOffset = r.top + r.height / 2 - window.innerHeight / 2;
     parallaxEls.forEach(el => {
@@ -233,4 +233,37 @@
     form.reset();
   });
   form?.addEventListener('input', e => e.target.closest('.field')?.classList.remove('is-invalid'));
+
+  /* ---------- Full talent photos replace the cut-off crops when present ---------- */
+  document.querySelectorAll('img[data-full]').forEach(img => {
+    const probe = new Image();
+    probe.onload = () => {
+      img.src = img.dataset.full;
+      img.closest('.is-partial')?.classList.remove('is-partial');
+    };
+    probe.src = img.dataset.full;
+  });
+
+  /* ---------- Talents row: start centred on the featured talent on small screens ---------- */
+  const talentRow = document.querySelector('.talents__row');
+  const featured = document.querySelector('[data-featured]');
+  function centreFeatured() {
+    if (!talentRow || !featured || window.innerWidth > 1024) return;
+    talentRow.scrollLeft = featured.offsetLeft - (talentRow.clientWidth - featured.offsetWidth) / 2;
+  }
+  window.addEventListener('load', centreFeatured);
+
+  /* ---------- Close the mobile menu with Escape / when resizing up ---------- */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && nav?.classList.contains('is-open')) {
+      nav.classList.remove('is-open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 760 && nav?.classList.contains('is-open')) {
+      nav.classList.remove('is-open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
 })();
