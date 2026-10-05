@@ -14,6 +14,25 @@
     toggle?.setAttribute('aria-expanded', 'false');
   }));
 
+  /* ---------- In-page links: smooth scroll, keep the URL clean ----------
+     Without this the #section is written into the address bar, so a refresh
+     or a shared link reopens the page halfway down (e.g. at #contact). */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!id) { e.preventDefault(); return; }               // placeholder links (#)
+    const target = id === 'top' ? document.body : document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    if (id === 'top') window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    else target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    if (id === 'main') {                                    // skip link: move keyboard focus too
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    }
+  });
+
   /* ---------- Active nav link + smart floating header ---------- */
   const navLinks = [...document.querySelectorAll('.nav__links a')];
   const navTargets = navLinks.map(a => document.querySelector(a.getAttribute('href')));

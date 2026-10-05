@@ -28,6 +28,14 @@
       }
       fit();
       window.addEventListener('resize', fit);
+
+      /* Always open at the top: drop any #section left in the address bar
+         and stop the browser restoring an old scroll position on refresh. */
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      if (location.hash) {
+        history.replaceState(null, '', location.pathname + location.search);
+        window.addEventListener('load', function () { window.scrollTo(0, 0); });
+      }
     })();
   </script>
 </head>
