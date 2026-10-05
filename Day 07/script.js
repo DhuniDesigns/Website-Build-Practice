@@ -62,50 +62,104 @@
   }, { threshold: 0.6 });
   counters.forEach(el => countObserver.observe(el));
 
-  /* ---------- How it works: steps with auto-advancing progress ---------- */
-  const steps = [...document.querySelectorAll('.step')];
-  const bars = [...document.querySelectorAll('.how__bar')];
-  const STEP_MS = 6000;
-  let current = 0;
-  let stepStart = 0;
-  let paused = false;
-  let howVisible = false;
-
-  function setStep(i) {
-    current = i;
-    stepStart = performance.now();
-    steps.forEach((s, idx) => {
-      s.classList.toggle('is-active', idx === i);
-      s.setAttribute('aria-selected', String(idx === i));
-    });
-    bars.forEach((b, idx) => {
-      b.classList.toggle('is-done', idx < i);
-      b.firstElementChild.style.width = idx < i ? '100%' : '0';
-    });
-  }
-
-  function loop(now) {
-    if (howVisible && !paused && !reduceMotion) {
-      const p = Math.min((now - stepStart) / STEP_MS, 1);
-      bars[current].firstElementChild.style.width = (p * 100) + '%';
-      if (p >= 1) setStep((current + 1) % steps.length);
-    } else {
-      stepStart = now - parseFloat(bars[current].firstElementChild.style.width || 0) / 100 * STEP_MS;
-    }
-    requestAnimationFrame(loop);
-  }
-
-  if (steps.length) {
-    steps.forEach((s, i) => s.addEventListener('click', () => setStep(i)));
+  /* ---------- How it works: image + step carousel ---------- */
+  (() => {
     const how = document.querySelector('.how');
-    how.addEventListener('mouseenter', () => { paused = true; });
-    how.addEventListener('mouseleave', () => { paused = false; });
-    new IntersectionObserver(([e]) => { howVisible = e.isIntersecting; }, { threshold: 0.3 }).observe(how);
-    setStep(0);
-    // Figma shows step 1 with a 72px fill on a ~453px bar
-    bars[0].firstElementChild.style.width = reduceMotion ? '100%' : '16%';
-    requestAnimationFrame(loop);
-  }
+    if (!how) return;
+    const media = how.querySelector('[data-how-media]');
+    const slides = [...how.querySelectorAll('.how__slide')];
+    const steps = [...how.querySelectorAll('.step')];
+    const bars = [...how.querySelectorAll('.how__bar')];
+    const countEl = how.querySelector('[data-how-count]');
+    const STEP_MS = 6500;
+    let current = 0, elapsed = 0, last = performance.now();
+    let hovering = false, visible = false, focusWithin = false;
+
+    // warm the cache so the wipe never shows a half-loaded photo
+    slides.forEach(s => { s.loading = 'eager'; if (s.decode) s.decode().catch(() => {}); });
+
+    const fill = (i, p) => bars[i].style.setProperty('--p', p);
+
+    function go(i, { user = false } = {}) {
+      const n = steps.length;
+      i = (i + n) % n;
+      if (i === current && !user) return;
+      const back = user && i < current;
+      const prev = slides[current];
+      slides.forEach(s => s.classList.remove('is-leaving', 'is-active', 'is-back'));
+      if (prev !== slides[i]) prev.classList.add('is-leaving');
+      void slides[i].offsetWidth;                     // restart the CSS animation
+      slides[i].classList.add('is-active');
+      if (back) slides[i].classList.add('is-back');
+      media.classList.add('is-ready');
+
+      steps.forEach((s, k) => {
+        const on = k === i;
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-selected', String(on));
+        s.tabIndex = on ? 0 : -1;
+      });
+      bars.forEach((_, k) => fill(k, k < i ? 1 : 0));
+      if (countEl) countEl.textContent = String(i + 1).padStart(2, '0');
+      current = i;
+      elapsed = 0;
+    }
+
+    function tick(now) {
+      const dt = Math.min(now - last, 100);
+      last = now;
+      const running = visible && !hovering && !focusWithin && !document.hidden && !reduceMotion;
+      if (running) {
+        elapsed += dt;
+        fill(current, Math.min(elapsed / STEP_MS, 1));
+        if (elapsed >= STEP_MS) go(current + 1);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // clicks
+    steps.forEach((s, i) => s.addEventListener('click', () => go(i, { user: true })));
+    bars.forEach((b, i) => b.addEventListener('click', () => go(i, { user: true })));
+
+    // keyboard: arrows / Home / End move between tabs
+    how.querySelector('.how__steps').addEventListener('keydown', e => {
+      const map = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      let next = null;
+      if (e.key in map) next = current + map[e.key];
+      if (e.key === 'Home') next = 0;
+      if (e.key === 'End') next = steps.length - 1;
+      if (next === null) return;
+      e.preventDefault();
+      go(next, { user: true });
+      steps[current].focus();
+    });
+
+    // pause while the visitor is reading or interacting
+    [media, how.querySelector('.how__steps')].forEach(el => {
+      el.addEventListener('mouseenter', () => { hovering = true; });
+      el.addEventListener('mouseleave', () => { hovering = false; });
+    });
+    how.addEventListener('focusin', () => { focusWithin = true; });
+    how.addEventListener('focusout', () => { focusWithin = how.contains(document.activeElement); });
+
+    // swipe the photo on touch screens
+    let sx = null, sy = null;
+    media.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; });
+    media.addEventListener('pointerup', e => {
+      if (sx === null) return;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      sx = sy = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(current + (dx < 0 ? 1 : -1), { user: true });
+    });
+
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.35 }).observe(how);
+
+    go(0, { user: true });
+    // Figma shows step 1 already partly filled (72px of the first bar)
+    elapsed = reduceMotion ? STEP_MS : STEP_MS * 0.16;
+    fill(0, reduceMotion ? 1 : 0.16);
+    requestAnimationFrame(tick);
+  })();
 
   /* ---------- Sliders (testimonials, case studies) ---------- */
   document.querySelectorAll('[data-slider]').forEach(slider => {

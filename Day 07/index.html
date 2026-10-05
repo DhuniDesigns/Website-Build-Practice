@@ -103,34 +103,45 @@
     </section>
 
     <!-- ============ HOW IT WORKS ============ -->
-    <section class="how" id="how">
-      <div class="container">
+    <!-- Step 2 & 3 photos from Unsplash (free licence): Vitaly Gariev, Maxim Tolchinskiy -->
+    <section class="how" id="how" aria-roledescription="carousel" aria-label="How it works">
+      <div class="container how__inner">
         <h2 class="section-title reveal">How It Works</h2>
-        <div class="how__media reveal">
-          <img src="assets/how-it-works.jpg" alt="A photo studio set up with lights, monitors and a camera cart" width="1376" height="653" />
+
+        <div class="how__media" data-how-media>
+          <img class="how__slide is-active" id="how-slide-1" src="assets/how-it-works.jpg" alt="A photo studio set up with lights, monitors and a camera cart" width="1376" height="653" />
+          <img class="how__slide" id="how-slide-2" src="assets/how-talent.jpg" alt="A model being styled and photographed in a bright studio" width="1800" height="1013" loading="lazy" />
+          <img class="how__slide" id="how-slide-3" src="assets/how-execute.jpg" alt="A black and white shoot in progress with lights and crew" width="1800" height="1200" loading="lazy" />
+          <span class="how__count" aria-hidden="true"><b data-how-count>01</b> / 03</span>
         </div>
 
-        <div class="how__progress" aria-hidden="true">
-          <span class="how__bar"><i></i></span>
-          <span class="how__bar"><i></i></span>
-          <span class="how__bar"><i></i></span>
+        <div class="how__progress">
+          <button class="how__bar" aria-label="Show step 1"><i></i></button>
+          <button class="how__bar" aria-label="Show step 2"><i></i></button>
+          <button class="how__bar" aria-label="Show step 3"><i></i></button>
         </div>
 
-        <div class="how__steps" role="tablist">
-          <button class="step is-active" role="tab" aria-selected="true">
+        <div class="how__steps" role="tablist" aria-label="Steps">
+          <button class="step is-active" role="tab" aria-selected="true" aria-controls="how-slide-1">
             <span class="step__num">01</span>
-            <span class="step__title">We Strategize</span>
-            <span class="step__desc">We craft a tailored campaign strategy based on your brand’s goals and target audience.</span>
+            <span class="step__body">
+              <span class="step__title">We Strategize</span>
+              <span class="step__desc">We craft a tailored campaign strategy based on your brand’s goals and target audience.</span>
+            </span>
           </button>
-          <button class="step" role="tab" aria-selected="false">
+          <button class="step" role="tab" aria-selected="false" aria-controls="how-slide-2" tabindex="-1">
             <span class="step__num">02</span>
-            <span class="step__title">We Connect You <br />to Talent</span>
-            <span class="step__desc">We match you with vetted Dubai creators who fit your audience, aesthetic and goals.</span>
+            <span class="step__body">
+              <span class="step__title">We Connect You <br />to Talent</span>
+              <span class="step__desc">We match you with vetted Dubai creators who fit your audience, aesthetic and goals.</span>
+            </span>
           </button>
-          <button class="step" role="tab" aria-selected="false">
+          <button class="step" role="tab" aria-selected="false" aria-controls="how-slide-3" tabindex="-1">
             <span class="step__num">03</span>
-            <span class="step__title">We Execute <br />and Deliver</span>
-            <span class="step__desc">We run the shoots, manage the content and report on the results that matter.</span>
+            <span class="step__body">
+              <span class="step__title">We Execute <br />and Deliver</span>
+              <span class="step__desc">We run the shoots, manage the content and report on the results that matter.</span>
+            </span>
           </button>
         </div>
       </div>
