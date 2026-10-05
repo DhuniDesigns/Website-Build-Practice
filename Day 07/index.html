@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NYTA — Dubai Influencer Agency</title>
+  <meta name="description" content="NYTA connects brands to Dubai’s top talent — strategy, shoots and campaigns that convert." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preload" href="assets/fonts/manrope-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top">
+    <nav class="nav container" aria-label="Main">
+      <div class="nav__left">
+        <a href="#top" class="nav__logo" aria-label="NYTA home">
+          <img src="assets/logo.png" alt="NYTA" width="41" height="32" />
+        </a>
+        <ul class="nav__links">
+          <li><a href="#about" class="is-active">About</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#talent">Talent</a></li>
+          <li><a href="#services">Services</a></li>
+        </ul>
+      </div>
+      <a href="#contact" class="nav__cta">Chat with the founder</a>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </nav>
+
+    <div class="hero__intro container">
+      <h1 class="hero__title reveal">
+        Connecting Brands to Dubai’s Top Talent and Driving <br />Campaign Conversions
+      </h1>
+      <p class="hero__sub reveal" style="--d:120ms">
+        We don’t just match you with influencers.<br />
+        We craft the strategy, run the shoots, and deliver real results.
+      </p>
+    </div>
+
+    <div class="hero__media">
+      <img src="assets/hero.jpg" alt="Three friends celebrating at a Dubai evening event" width="1440" height="800" />
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ TRUSTED BY ============ -->
+    <section class="trusted" id="about">
+      <div class="container trusted__grid">
+        <h2 class="section-title reveal">Trusted by visionaries</h2>
+        <div class="trusted__logos reveal" style="--d:100ms">
+          <div class="trusted__col">
+            <img src="assets/logo-cartier.svg" alt="Cartier" width="80" height="22" />
+            <img src="assets/logo-emaar.svg" alt="Emaar" width="101" height="20" />
+          </div>
+          <div class="trusted__col">
+            <img src="assets/logo-dior.svg" alt="Dior" width="71" height="20" />
+            <img src="assets/logo-gucci.svg" alt="Gucci" width="125" height="20" />
+          </div>
+          <div class="trusted__col">
+            <img src="assets/logo-chanel.svg" alt="Chanel" width="128" height="20" />
+            <img src="assets/logo-prada.svg" alt="Prada" width="128" height="20" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats">
+      <div class="container stats__row">
+        <article class="stat reveal">
+          <p class="stat__label">Vetted influencers available across various categories</p>
+          <p class="stat__value" data-count="200" data-suffix="+">200+</p>
+        </article>
+        <article class="stat reveal" style="--d:100ms">
+          <p class="stat__label">Total views from influencer content across all campaigns.</p>
+          <p class="stat__value" data-count="80" data-suffix="M+">80M+</p>
+        </article>
+        <article class="stat reveal" style="--d:200ms">
+          <p class="stat__label">Average engagement rate across influencer posts</p>
+          <p class="stat__value" data-count="7" data-suffix="%">7%</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="how" id="how">
+      <div class="container">
+        <h2 class="section-title reveal">How It Works</h2>
+        <div class="how__media reveal">
+          <img src="assets/how-it-works.jpg" alt="A photo studio set up with lights, monitors and a camera cart" width="1376" height="653" />
+        </div>
+
+        <div class="how__progress" aria-hidden="true">
+          <span class="how__bar"><i></i></span>
+          <span class="how__bar"><i></i></span>
+          <span class="how__bar"><i></i></span>
+        </div>
+
+        <div class="how__steps" role="tablist">
+          <button class="step is-active" role="tab" aria-selected="true">
+            <span class="step__num">01</span>
+            <span class="step__title">We Strategize</span>
+            <span class="step__desc">We craft a tailored campaign strategy based on your brand’s goals and target audience.</span>
+          </button>
+          <button class="step" role="tab" aria-selected="false">
+            <span class="step__num">02</span>
+            <span class="step__title">We Connect You<br />to Talent</span>
+            <span class="step__desc">We match you with vetted Dubai creators who fit your audience, aesthetic and goals.</span>
+          </button>
+          <button class="step" role="tab" aria-selected="false">
+            <span class="step__num">03</span>
+            <span class="step__title">We Execute<br />and Deliver</span>
+            <span class="step__desc">We run the shoots, manage the content and report on the results that matter.</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="reviews" id="reviews">
+      <div class="container">
+        <h2 class="section-title reveal">what our clients say</h2>
+      </div>
+
+      <div class="slider" data-slider>
+        <div class="slider__track reviews__track" data-track>
+          <figure class="review">
+            <img src="assets/testimonial-cartier.svg" alt="Cartier" width="87" height="24" />
+            <blockquote>“ <strong>NYTA crafted a tailored strategy that exceeded our expectations.</strong><br />Our engagement doubled, and sales rose by 30% after just one campaign. Highly recommend! ”</blockquote>
+          </figure>
+          <figure class="review">
+            <img src="assets/testimonial-dior.svg" alt="Dior" width="86" height="24" />
+            <blockquote>“ <strong>NYTA delivered an outstanding campaign with top influencers.</strong><br />Our brand visibility skyrocketed, and we saw a significant increase in conversions. Highly effective and professional team! ”</blockquote>
+          </figure>
+          <figure class="review">
+            <img src="assets/testimonial-cartier.svg" alt="Cartier" width="87" height="24" />
+            <blockquote>“ <strong>NYTA crafted a tailored strategy that exceeded our expectations.</strong><br />Our engagement doubled, and sales rose by 30% after just one campaign. Highly recommend! ”</blockquote>
+          </figure>
+          <figure class="review">
+            <img src="assets/testimonial-dior.svg" alt="Dior" width="86" height="24" />
+            <blockquote>“ <strong>NYTA delivered an outstanding campaign with top influencers.</strong><br />Our brand visibility skyrocketed, and we saw a significant increase in conversions. Highly effective and professional team! ”</blockquote>
+          </figure>
+          <figure class="review">
+            <img src="assets/testimonial-cartier.svg" alt="Cartier" width="87" height="24" />
+            <blockquote>“ <strong>NYTA crafted a tailored strategy that exceeded our expectations.</strong><br />Our engagement doubled, and sales rose by 30% after just one campaign. Highly recommend! ”</blockquote>
+          </figure>
+        </div>
+
+        <div class="container slider__controls">
+          <div class="slider__status">
+            <span class="slider__count" data-count>01/05</span>
+            <span class="slider__bar"><i data-bar></i></span>
+          </div>
+          <div class="slider__arrows">
+            <button class="arrow" data-prev aria-label="Previous">
+              <img class="arrow__off" src="assets/arrow-left.svg" alt="" width="32" height="32" />
+              <img class="arrow__on arrow__flip" src="assets/arrow-right.svg" alt="" width="32" height="32" />
+            </button>
+            <button class="arrow" data-next aria-label="Next">
+              <img class="arrow__on" src="assets/arrow-right.svg" alt="" width="32" height="32" />
+              <img class="arrow__off arrow__flip" src="assets/arrow-left.svg" alt="" width="32" height="32" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CAMPAIGN HIGHLIGHTS ============ -->
+    <section class="campaigns" id="work">
+      <div class="campaigns__stage">
+        <h2 class="campaigns__title">Campaign<br />Highlights</h2>
+
+        <figure class="campaign campaign--a" data-parallax="-0.06">
+          <div class="campaign__img"><img src="assets/campaign-beauty.jpg" alt="Beauty campaign: woman with wet hair against sandstone" width="442" height="400" /></div>
+          <figcaption>Beauty Beyond Boundaries</figcaption>
+        </figure>
+
+        <figure class="campaign campaign--b">
+          <div class="campaign__img"><img src="assets/campaign-luxe-1.jpg" alt="Luxury campaign: man in a velvet tuxedo" width="442" height="311" /></div>
+          <figcaption>The Luxe Life</figcaption>
+        </figure>
+
+        <figure class="campaign campaign--c">
+          <div class="campaign__img"><img src="assets/campaign-luxe-2.jpg" alt="Luxury campaign: woman in a tulle gown by a Dubai rooftop pool" width="442" height="302" /></div>
+          <figcaption>The Luxe Life</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="services" id="services">
+      <div class="container">
+        <h2 class="section-title reveal">Services</h2>
+
+        <ul class="services__list">
+          <li class="service reveal">
+            <div class="service__row">
+              <h3>Influencer Marketing</h3>
+              <a href="#contact" class="service__cta" data-service="Influencer Marketing">Request</a>
+            </div>
+            <p class="service__desc">We connect your brand with top Dubai influencers across industries. Our talent creates content (videos, photos, TikToks, UGC) and we manage shoot logistics.</p>
+          </li>
+          <li class="service reveal">
+            <div class="service__row">
+              <h3>Campaign Strategy &amp; Consulting</h3>
+              <a href="#contact" class="service__cta" data-service="Campaign Strategy &amp; Consulting">Request</a>
+            </div>
+          </li>
+          <li class="service reveal">
+            <div class="service__row">
+              <h3>Campaign Execution</h3>
+              <a href="#contact" class="service__cta" data-service="Campaign Execution">Request</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ TALENTS ============ -->
+    <section class="talents" id="talent">
+      <div class="container">
+        <h2 class="section-title reveal">Our Talents</h2>
+      </div>
+
+      <div class="talents__stage">
+        <dl class="talents__info">
+          <div><dt>Category -</dt><dd>Beauty</dd></div>
+          <div><dt>Followers -</dt><dd>110M</dd></div>
+        </dl>
+        <div class="talents__row">
+          <div class="talent talent--edge-l"><img src="assets/talent-1-partial.jpg" alt="Fitness creator taking a mirror selfie" /></div>
+          <div class="talent"><img src="assets/talent-2.jpg" alt="Lifestyle creator seated in a classic apartment with his dog" /></div>
+          <div class="talent talent--featured"><img src="assets/talent-3.jpg" alt="Beauty creator holding two pink beauty products" /></div>
+          <div class="talent"><img src="assets/talent-4.jpg" alt="Fashion creator in black with a silver bag" /></div>
+          <div class="talent"><img src="assets/talent-5.jpg" alt="Athlete training on a tennis court" /></div>
+          <div class="talent"><img src="assets/talent-6.jpg" alt="Tennis creator crouching beside a racket" /></div>
+          <div class="talent talent--edge-r"><img src="assets/talent-7-partial.jpg" alt="Fashion creator in a marble hallway" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CASE STUDIES ============ -->
+    <section class="cases" id="cases">
+      <div class="container cases__head">
+        <h2 class="section-title reveal">Case studies</h2>
+        <a href="#cases" class="cases__all">See all</a>
+      </div>
+
+      <div class="slider" data-slider>
+        <div class="slider__track cases__track" data-track>
+          <article class="case case--tall">
+            <div class="case__img"><img src="assets/case-urban-fashion.jpg" alt="Model in a headscarf on a grand marble staircase" width="430" height="611" /></div>
+            <h3>Urban Fashion Co.</h3>
+          </article>
+          <article class="case">
+            <div class="case__img"><img src="assets/case-luxe-travel.jpg" alt="Model in a silk gown by a desert resort pool" width="430" height="461" /></div>
+            <h3>Luxe Trravel</h3>
+          </article>
+          <article class="case case--tall">
+            <div class="case__img"><img src="assets/case-elite-fitness.jpg" alt="Athlete stretching on a studio floor" width="430" height="611" /></div>
+            <h3>Elite Fitness</h3>
+          </article>
+          <article class="case">
+            <div class="case__img case__img--empty"><img src="assets/case-gourmet-delights.jpg" alt="Gourmet Delights campaign" width="430" height="461" onerror="this.remove()" /></div>
+            <h3>Gourmet Delights</h3>
+          </article>
+        </div>
+
+        <div class="container slider__controls">
+          <div class="slider__status">
+            <span class="slider__count" data-count>01/05</span>
+            <span class="slider__bar"><i data-bar></i></span>
+          </div>
+          <div class="slider__arrows">
+            <button class="arrow" data-prev aria-label="Previous">
+              <img class="arrow__off" src="assets/arrow-left.svg" alt="" width="32" height="32" />
+              <img class="arrow__on arrow__flip" src="assets/arrow-right.svg" alt="" width="32" height="32" />
+            </button>
+            <button class="arrow" data-next aria-label="Next">
+              <img class="arrow__on" src="assets/arrow-right.svg" alt="" width="32" height="32" />
+              <img class="arrow__off arrow__flip" src="assets/arrow-left.svg" alt="" width="32" height="32" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <h2 class="section-title">Contact us</h2>
+
+        <form class="form" novalidate>
+          <div class="form__row">
+            <label class="field"><span class="sr-only">Name</span><input type="text" name="name" placeholder="Name" autocomplete="name" required /></label>
+            <label class="field"><span class="sr-only">Email</span><input type="email" name="email" placeholder="Email" autocomplete="email" required /></label>
+            <label class="field"><span class="sr-only">Company</span><input type="text" name="company" placeholder="Company" autocomplete="organization" /></label>
+          </div>
+          <label class="field field--msg"><span class="sr-only">Message</span><textarea name="message" placeholder="Message" rows="2" required></textarea></label>
+          <div class="form__foot">
+            <button type="submit" class="form__submit">Submit</button>
+            <p class="form__status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <div class="info">
+          <div class="info__col">
+            <p class="info__label">Address</p>
+            <p>Dubai Media City, Loft Offices 2, Entrance C, Office 210</p>
+          </div>
+          <div class="info__col">
+            <p class="info__label">Business Enquiries</p>
+            <a href="mailto:nyta@gmail.com">nyta@gmail.com</a>
+            <a href="tel:+9718749247990">+971 8749247990</a>
+          </div>
+          <div class="info__col">
+            <p class="info__label">Quick links</p>
+            <a href="#about" class="plain">About</a>
+            <a href="#work" class="plain">Work</a>
+            <a href="#talent" class="plain">Talent</a>
+          </div>
+          <div class="info__col">
+            <p class="info__label">Social media</p>
+            <a href="#" target="_blank" rel="noopener">Instagram</a>
+            <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="#" target="_blank" rel="noopener">Tiktok</a>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer container">
+        <p>© 2025 NYTA. All Rights Reserved.</p>
+        <div class="footer__links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
