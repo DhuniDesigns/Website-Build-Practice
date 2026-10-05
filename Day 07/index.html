@@ -9,6 +9,21 @@
   <link rel="preload" href="assets/fonts/manrope-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Above the 1440px Figma frame, scale the whole page up proportionally
+       so wide monitors look exactly like the design instead of leaving it boxed in. */
+    (function () {
+      var root = document.documentElement;
+      function fit() {
+        var w = root.clientWidth || window.innerWidth;
+        var z = w > 1440 ? w / 1440 : 1;
+        root.style.setProperty('--z', z);
+        root.classList.toggle('is-scaled', z > 1);
+      }
+      fit();
+      window.addEventListener('resize', fit);
+    })();
+  </script>
 </head>
 <body>
 

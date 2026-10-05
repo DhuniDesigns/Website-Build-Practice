@@ -875,6 +875,14 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .review:hover { background: transparent; border-color: var(--line); }
 }
 
+
+/* ---------- wide screens: scale the 1440 frame to fill the window ---------- */
+html.is-scaled body { zoom: var(--z); }
+html.is-scaled .slider__track {
+  padding-inline: var(--gutter);
+  scroll-padding-inline: var(--gutter);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
